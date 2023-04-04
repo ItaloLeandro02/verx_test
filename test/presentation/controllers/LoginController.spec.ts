@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 import { LoginController } from "@/presentation/controllers/LoginController";
 import { HttpRequest } from "@/presentation/protocols";
 import { AuthenticationSpy, ValidationSpy } from '@/presentation/test';
-import { badRequest } from '@/presentation/helpers/http';
+import { badRequest, unauthorized } from '@/presentation/helpers/http';
 import { InvalidParamError } from '@/presentation/errors';
 
 type SutTypes = {
@@ -52,6 +52,13 @@ describe('LoginController', () => {
             const httpRequest = makeHttpRequest();
             await sut.handle(httpRequest);
             expect(authentication.authenticationParams).toEqual(httpRequest.body);
+        });
+        it ('Deve retornar 401 caso Authentication não retorne um token', async () => {
+            const { sut, authentication } = makeSut();
+            authentication.token = '';
+            const httpRequest = makeHttpRequest();
+            const httpResponse = await sut.handle(httpRequest);
+            expect(httpResponse).toEqual(unauthorized());
         });
     });
 });
