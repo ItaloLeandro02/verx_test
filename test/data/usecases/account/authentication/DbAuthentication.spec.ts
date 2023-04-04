@@ -55,5 +55,12 @@ describe('DbAuthentication', () => {
             expect(hashComparer.plainTextParam).toBe(input.password);
             expect(hashComparer.digestParam).toBe(loadAccountByEmailRepository.mockAccount?.password);
         });
+        it ('Deve retonar uma exceção caso HashComparer falhe', async () => {
+            const { sut, hashComparer } = makeSut();
+            jest.spyOn(hashComparer, 'compare').mockImplementationOnce(() => { throw new Error() });
+            const input = mockInput();
+            const promise = sut.auth(input);
+            await expect(promise).rejects.toThrow();
+        });
     });
 });
