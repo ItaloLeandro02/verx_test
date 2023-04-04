@@ -5,6 +5,9 @@ import { JwtAdapter } from "@/infra/criptography/JwtAdapter";
 jest.mock('jsonwebtoken', () => ({
     sign (): Promise<string> {
         return Promise.resolve('any_token');
+    },
+    verify (): Promise<string> {
+        return Promise.resolve('decrypted_text');
     }
 }));
 
@@ -29,5 +32,13 @@ describe('JwtAdapter', () => {
             const promise = sut.encrypt('any_value');
             await expect(promise).rejects.toThrow();
         });
+    });
+    describe('verify()', () => {
+        it ('Deve chamar verigy com os dados corretos', async () => {
+            const verifySpy = jest.spyOn(jwt, 'verify');
+            const sut = new JwtAdapter(secret);
+            await sut.decrypt('any_token');
+            expect(verifySpy).toHaveBeenCalledWith('any_token', secret);
+        }); 
     });
 });
