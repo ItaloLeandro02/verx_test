@@ -1,25 +1,28 @@
 import { faker } from "@faker-js/faker";
 import { AuthenticationParams } from "@/domain/usercases/account";
 import { DbAuthentication } from "@/data/usecases/account/DbAuthentication";
-import { EncrypterSpy, HashComparerSpy, LoadAccountByEmailRepositorySpy } from "@/data/test";
+import { EncrypterSpy, HashComparerSpy, LoadAccountByEmailRepositorySpy, UpdateAccessTokenRepositorySpy } from "@/data/test";
 
 type SutTypes = { 
     sut: DbAuthentication,
     loadAccountByEmailRepository: LoadAccountByEmailRepositorySpy,
     hashComparer: HashComparerSpy,
-    encrypter: EncrypterSpy
+    encrypter: EncrypterSpy,
+    updateAccessTokenRepository: UpdateAccessTokenRepositorySpy
 };
 
 const makeSut = (): SutTypes => {
     const loadAccountByEmailRepository = new LoadAccountByEmailRepositorySpy(); 
     const hashComparer = new HashComparerSpy(); 
     const encrypter = new EncrypterSpy(); 
-    const sut = new DbAuthentication(loadAccountByEmailRepository, hashComparer, encrypter);
+    const updateAccessTokenRepository = new UpdateAccessTokenRepositorySpy(); 
+    const sut = new DbAuthentication(loadAccountByEmailRepository, hashComparer, encrypter, updateAccessTokenRepository);
     return {
         sut,
         loadAccountByEmailRepository,
         hashComparer,
-        encrypter
+        encrypter,
+        updateAccessTokenRepository
     }
 };
 const mockInput = (): AuthenticationParams => ({
@@ -86,6 +89,15 @@ describe('DbAuthentication', () => {
             const input = mockInput();
             const promise = sut.auth(input);
             await expect(promise).rejects.toThrow();
+        });
+    });
+    describe('UpdateAccessTokenRepository', () => {
+        it ('Deve chamar UpdateAccessTokenRepository com os valores corretos', async () => {
+            const { sut, loadAccountByEmailRepository, updateAccessTokenRepository } = makeSut();
+            const input = mockInput();
+            const token = await sut.auth(input);
+            expect(updateAccessTokenRepository.idParam).toBe(loadAccountByEmailRepository.mockAccount?.id);
+            expect(updateAccessTokenRepository.tokenParam).toBe(token);
         });
     });
     it ('Deve retonar um token em caso de sucesso', async () => {
