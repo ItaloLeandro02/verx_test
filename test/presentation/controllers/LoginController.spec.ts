@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { LoginController } from "@/presentation/controllers/LoginController";
-import { MissingError } from "@/presentation/errors";
+import { MissingParamError } from "@/presentation/errors";
 import { HttpRequest } from "@/presentation/protocols";
 import { badRequest } from '@/presentation/helpers/http';
 
@@ -29,7 +29,7 @@ describe('LoginController', () => {
         const httpRequest = makeHttpRequest();
         delete httpRequest.body.email;
         const httpResponse = await sut.handle(httpRequest);
-        expect(httpResponse).toEqual(badRequest(new MissingError('email')));
+        expect(httpResponse).toEqual(badRequest(new MissingParamError('email')));
     });
 
     it ('Deve retornar 400 caso a senha não seja informada', async () => {
@@ -37,6 +37,6 @@ describe('LoginController', () => {
         const httpRequest = makeHttpRequest();
         delete httpRequest.body.password;
         const httpResponse = await sut.handle(httpRequest);
-        expect(httpResponse).toEqual(badRequest(new MissingError('password')));
+        expect(httpResponse).toEqual(badRequest(new MissingParamError('password')));
     });
 });
