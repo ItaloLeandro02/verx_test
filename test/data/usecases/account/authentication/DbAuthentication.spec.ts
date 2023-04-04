@@ -62,5 +62,12 @@ describe('DbAuthentication', () => {
             const promise = sut.auth(input);
             await expect(promise).rejects.toThrow();
         });
+        it ('Deve retornar undefined caso HashComparer retorne undefined', async () => {
+            const { sut, hashComparer } = makeSut();
+            hashComparer.result = false;
+            const input = mockInput();
+            const model = await sut.auth(input);
+            expect(model).toBeUndefined();
+        });
     });
 });
