@@ -2,6 +2,12 @@ import { faker } from '@faker-js/faker';
 import validator from 'validator';
 import { EmailValidatorAdapter } from '@/infra/validators/EmailValidatorAdapter';
 
+jest.mock('validator', () => ({
+    isEmail (): boolean {
+        return true;
+    }
+}));
+
 type SutTypes = {
     sut: EmailValidatorAdapter
 };
@@ -20,5 +26,11 @@ describe('EmailValidatorAdapter', () => {
         const email = faker.internet.email();
         sut.isValid(email);
         expect(isEmailSpy).toHaveBeenCalledWith(email);
+    });
+    it ('Deve retornar true caso EmailValidatorAdapter retorne true', () => {
+        const { sut } = makeSut();
+        const email = faker.internet.email();
+        const isEmail = sut.isValid(email);
+        expect(isEmail).toBeTruthy();
     });
 });
