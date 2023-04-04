@@ -80,5 +80,12 @@ describe('DbAuthentication', () => {
             await sut.auth(input);
             expect(encrypter.encryptParam).toBe(loadAccountByEmailRepository.mockAccount?.id);
         });
+        it ('Deve retonar uma exceção caso Encrypter falhe', async () => {
+            const { sut, encrypter } = makeSut();
+            jest.spyOn(encrypter, 'encrypt').mockImplementationOnce(() => { throw new Error() });
+            const input = mockInput();
+            const promise = sut.auth(input);
+            await expect(promise).rejects.toThrow();
+        });
     });
 });
