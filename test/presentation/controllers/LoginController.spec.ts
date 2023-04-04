@@ -45,6 +45,13 @@ describe('LoginController', () => {
             const httpResponse = await sut.handle(httpRequest);
             expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')));
         });
+        it ('Deve retornar 500 caso Validation lance uma exceção', async () => {
+            const { sut, validation } = makeSut();
+            jest.spyOn(validation, 'validate').mockImplementationOnce(() => { throw new Error() });
+            const httpRequest = makeHttpRequest();
+            const httpResponse = await sut.handle(httpRequest);
+            expect(httpResponse).toEqual(serverError(new Error()));
+        });
     });
     describe('Authentication', () => {
         it ('Deve chamar Authentication com os dados corretos', async () => {
