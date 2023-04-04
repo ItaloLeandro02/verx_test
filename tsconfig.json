@@ -8,6 +8,7 @@
     "strict": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
+    "useUnknownInCatchVariables": false,
     "rootDirs": ["src", "tests"],
     "baseUrl": "src",
     "paths": {

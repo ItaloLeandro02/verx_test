@@ -1,5 +1,5 @@
 import { Controller, HttpRequest, HttpResponse, Validation } from "@/presentation/protocols";
-import { badRequest, unauthorized } from "@/presentation/helpers/http";
+import { badRequest, serverError, unauthorized } from "@/presentation/helpers/http";
 import { Authentication } from "@/domain/usercases";
 
 export class LoginController implements Controller {
@@ -9,17 +9,21 @@ export class LoginController implements Controller {
     ) {}
     
     async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
-        const error = this.validation.validate(httpRequest.body);
-        if (error) {
-            return badRequest(error);
+        try {
+            const error = this.validation.validate(httpRequest.body);
+            if (error) {
+                return badRequest(error);
+            }
+            const token = await this.authentication.auth(httpRequest.body);
+            if (!token) {
+                return unauthorized();
+            }
+            return {
+                statusCode: 200,
+                body: null
+            };
+        } catch (error) {
+            return serverError(error);
         }
-        const token = await this.authentication.auth(httpRequest.body);
-        if (!token) {
-            return unauthorized();
-        }
-        return {
-            statusCode: 200,
-            body: null
-        };
     }
 }
