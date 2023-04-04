@@ -99,6 +99,13 @@ describe('DbAuthentication', () => {
             expect(updateAccessTokenRepository.idParam).toBe(loadAccountByEmailRepository.mockAccount?.id);
             expect(updateAccessTokenRepository.tokenParam).toBe(token);
         });
+        it ('Deve retonar uma exceção caso UpdateAccessTokenRepository falhe', async () => {
+            const { sut, updateAccessTokenRepository } = makeSut();
+            jest.spyOn(updateAccessTokenRepository, 'updateAccessToken').mockImplementationOnce(() => { throw new Error() });
+            const input = mockInput();
+            const promise = sut.auth(input);
+            await expect(promise).rejects.toThrow();
+        });
     });
     it ('Deve retonar um token em caso de sucesso', async () => {
         const { sut, encrypter } = makeSut();
