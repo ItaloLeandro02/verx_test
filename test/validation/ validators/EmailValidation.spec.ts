@@ -32,6 +32,12 @@ describe('EmailValidation', () => {
         sut.validate(input);
         expect(emailValidator.emailParam).toEqual(input.email);
     });
+    it ('Deve retornar undefined caso o email esteja correto', () => {
+        const { sut } = makeSut();
+        const input = { email: faker.internet.email() };
+        const error = sut.validate(input);
+        expect(error).toBeFalsy();
+    });
     it ('Deve lançar uma exceção caso EmailValidator falhe', () => {
         const { sut, emailValidator } = makeSut();
         jest.spyOn(emailValidator, 'isValid').mockImplementationOnce(() => { throw new Error() });
