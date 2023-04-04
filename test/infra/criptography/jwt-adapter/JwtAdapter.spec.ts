@@ -18,5 +18,10 @@ describe('JwtAdapter', () => {
             await sut.encrypt('any_value');
             expect(signSpy).toHaveBeenCalledWith({ id: 'any_value' }, secret);
         });
+        it ('Deve retornar um token em caso de sucesso', async () => {
+            const sut = new JwtAdapter(secret);
+            const token = await sut.encrypt('any_value');
+            expect(token).toBe('any_token');
+        });
     });
 });
