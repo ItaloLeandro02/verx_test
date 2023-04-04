@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 import { LoginController } from "@/presentation/controllers/LoginController";
 import { HttpRequest } from "@/presentation/protocols";
 import { AuthenticationSpy, ValidationSpy } from '@/presentation/test';
-import { badRequest, unauthorized } from '@/presentation/helpers/http';
+import { badRequest, serverError, unauthorized } from '@/presentation/helpers/http';
 import { InvalidParamError } from '@/presentation/errors';
 
 type SutTypes = {
@@ -59,6 +59,13 @@ describe('LoginController', () => {
             const httpRequest = makeHttpRequest();
             const httpResponse = await sut.handle(httpRequest);
             expect(httpResponse).toEqual(unauthorized());
+        });
+        it ('Deve retornar 500 caso Authentication lance uma exceção', async () => {
+            const { sut, authentication } = makeSut();
+            jest.spyOn(authentication, 'auth').mockImplementationOnce(() => { throw new Error() });
+            const httpRequest = makeHttpRequest();
+            const httpResponse = await sut.handle(httpRequest);
+            expect(httpResponse).toEqual(serverError(new Error()));
         });
     });
 });
