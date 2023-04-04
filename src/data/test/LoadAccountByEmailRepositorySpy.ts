@@ -4,7 +4,7 @@ import { faker } from "@faker-js/faker";
 
 export class LoadAccountByEmailRepositorySpy implements LoadAccountByEmailRepository {
     emailParam: string = '';
-    mockAccount: AccountModel;
+    mockAccount?: AccountModel;
 
     constructor() {
         this.mockAccount = {
@@ -15,7 +15,7 @@ export class LoadAccountByEmailRepositorySpy implements LoadAccountByEmailReposi
         }
     }
 
-    async loadByEmail(email: string): Promise<AccountModel> {
+    async loadByEmail(email: string): Promise<AccountModel | undefined> {
         this.emailParam = email;
         return Promise.resolve(this.mockAccount);
     }
