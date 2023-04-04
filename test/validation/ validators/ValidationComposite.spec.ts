@@ -1,4 +1,4 @@
-import { InvalidParamError } from "@/presentation/errors";
+import { InvalidParamError, MissingParamError } from "@/presentation/errors";
 import { Validation } from "@/presentation/protocols";
 import { ValidationSpy } from "@/validation/test";
 import { ValidationComposite } from "@/validation/validators";
@@ -28,5 +28,13 @@ describe('ValidationComposite', () => {
         const input = { field: faker.random.word() };
         const error = sut.validate(input);
         expect(error).toEqual(new InvalidParamError('field'));
+    });
+    it ('Deve retornar o primeiro erro caso mais de uma validação falhe', () => {
+        const { sut, validations } = makeSut();
+        jest.spyOn(validations[0], 'validate').mockImplementationOnce(() => new MissingParamError('field'));
+        jest.spyOn(validations[1], 'validate').mockImplementationOnce(() => new InvalidParamError('field'));
+        const input = { field: faker.random.word() };
+        const error = sut.validate(input);
+        expect(error).toEqual(new MissingParamError('field'));
     });
 });
