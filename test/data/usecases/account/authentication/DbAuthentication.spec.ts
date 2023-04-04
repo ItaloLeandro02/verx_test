@@ -1,19 +1,22 @@
 import { faker } from "@faker-js/faker";
 import { AuthenticationParams } from "@/domain/usercases/account";
 import { DbAuthentication } from "@/data/usecases/account/DbAuthentication";
-import { LoadAccountByEmailRepositorySpy } from "@/data/test";
+import { HashComparerSpy, LoadAccountByEmailRepositorySpy } from "@/data/test";
 
 type SutTypes = { 
     sut: DbAuthentication,
-    loadAccountByEmailRepository: LoadAccountByEmailRepositorySpy
+    loadAccountByEmailRepository: LoadAccountByEmailRepositorySpy,
+    hashComparer: HashComparerSpy
 };
 
 const makeSut = (): SutTypes => {
     const loadAccountByEmailRepository = new LoadAccountByEmailRepositorySpy(); 
-    const sut = new DbAuthentication(loadAccountByEmailRepository);
+    const hashComparer = new HashComparerSpy(); 
+    const sut = new DbAuthentication(loadAccountByEmailRepository, hashComparer);
     return {
         sut,
-        loadAccountByEmailRepository
+        loadAccountByEmailRepository,
+        hashComparer
     }
 };
 const mockInput = (): AuthenticationParams => ({
@@ -42,6 +45,15 @@ describe('DbAuthentication', () => {
             const input = mockInput();
             const model = await sut.auth(input);
             expect(model).toBeUndefined();
+        });
+    });
+    describe('HashComparer', () => {
+        it ('Deve chamar HashComparer com os valores corretos', async () => {
+            const { sut, loadAccountByEmailRepository, hashComparer } = makeSut();
+            const input = mockInput();
+            await sut.auth(input);
+            expect(hashComparer.plainTextParam).toBe(input.password);
+            expect(hashComparer.digestParam).toBe(loadAccountByEmailRepository.mockAccount?.password);
         });
     });
 });
