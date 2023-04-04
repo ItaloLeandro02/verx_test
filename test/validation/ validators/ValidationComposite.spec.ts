@@ -37,4 +37,10 @@ describe('ValidationComposite', () => {
         const error = sut.validate(input);
         expect(error).toEqual(new MissingParamError('field'));
     });
+    it ('Deve retornar undefine caso nenhuma validação falhe', () => {
+        const { sut } = makeSut();
+        const input = { field: faker.random.word() };
+        const error = sut.validate(input);
+        expect(error).toBeFalsy;
+    });
 });
