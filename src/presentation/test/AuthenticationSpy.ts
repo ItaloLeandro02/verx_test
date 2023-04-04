@@ -1,4 +1,4 @@
-import { Authentication, AuthenticationParams } from "@/domain/usercases";
+import { Authentication, AuthenticationParams } from "@/domain/usercases/account";
 
 export class AuthenticationSpy implements Authentication {
     authenticationParams = {} as AuthenticationParams; 
