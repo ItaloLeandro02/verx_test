@@ -36,5 +36,12 @@ describe('DbAuthentication', () => {
             const promise = sut.auth(input);
             await expect(promise).rejects.toThrow();
         });
+        it ('Deve retornar undefined caso LoadAccountByEmailRepository retorne undefined', async () => {
+            const { sut, loadAccountByEmailRepository } = makeSut();
+            loadAccountByEmailRepository.mockAccount = undefined;
+            const input = mockInput();
+            const model = await sut.auth(input);
+            expect(model).toBeUndefined();
+        });
     });
 });
