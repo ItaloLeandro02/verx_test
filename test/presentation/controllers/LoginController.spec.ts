@@ -1,17 +1,19 @@
 import { faker } from '@faker-js/faker';
 import { LoginController } from "@/presentation/controllers/LoginController";
-import { MissingParamError } from "@/presentation/errors";
 import { HttpRequest } from "@/presentation/protocols";
-import { badRequest } from '@/presentation/helpers/http';
+import { ValidationSpy } from '@/presentation/test';
 
 type SutTypes = {
-    sut: LoginController
+    sut: LoginController,
+    validation: ValidationSpy
 };
 
 const makeSut = (): SutTypes => {
-    const sut = new LoginController();
+    const validation = new ValidationSpy();
+    const sut = new LoginController(validation);
     return {
-        sut
+        sut,
+        validation
     };
 };
 const makeHttpRequest = (): HttpRequest => {
@@ -24,19 +26,10 @@ const makeHttpRequest = (): HttpRequest => {
 }
 
 describe('LoginController', () => {
-    it ('Deve retornar 400 caso o e-mail não seja informado', async () => {
-        const { sut } = makeSut();
+    it ('Deve chamar Validations com os dados corretos', async () => {
+        const { sut, validation } = makeSut();
         const httpRequest = makeHttpRequest();
-        delete httpRequest.body.email;
-        const httpResponse = await sut.handle(httpRequest);
-        expect(httpResponse).toEqual(badRequest(new MissingParamError('email')));
-    });
-
-    it ('Deve retornar 400 caso a senha não seja informada', async () => {
-        const { sut } = makeSut();
-        const httpRequest = makeHttpRequest();
-        delete httpRequest.body.password;
-        const httpResponse = await sut.handle(httpRequest);
-        expect(httpResponse).toEqual(badRequest(new MissingParamError('password')));
+        await sut.handle(httpRequest);
+        expect(validation.inputParams).toEqual(httpRequest.body);
     });
 });
