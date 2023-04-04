@@ -19,7 +19,12 @@ describe('BcryptAdapter', () => {
             const { sut } = makeSut();
             const compareSpy = jest.spyOn(bcrypt, 'compare');
             await sut.compare('any_value', 'any_hash');
-            expect(compareSpy).toHaveBeenCalledWith('any_value', 'any_hash')
+            expect(compareSpy).toHaveBeenCalledWith('any_value', 'any_hash');
+        });
+        it ('Deve retornar true caso compare retorne true', async () => {
+            const { sut } = makeSut();
+            const isValid = await sut.compare('any_value', 'any_hash');
+            expect(isValid).toBeTruthy();
         });
     });
 });
