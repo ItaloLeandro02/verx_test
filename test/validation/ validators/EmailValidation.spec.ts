@@ -32,4 +32,9 @@ describe('EmailValidation', () => {
         sut.validate(input);
         expect(emailValidator.emailParam).toEqual(input.email);
     });
+    it ('Deve lançar uma exceção caso EmailValidator falhe', () => {
+        const { sut, emailValidator } = makeSut();
+        jest.spyOn(emailValidator, 'isValid').mockImplementationOnce(() => { throw new Error() });
+        expect(sut.validate).toThrow();
+    });
 });
