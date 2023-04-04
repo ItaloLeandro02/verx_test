@@ -46,8 +46,8 @@ describe('DbAuthentication', () => {
             const { sut, loadAccountByEmailRepository } = makeSut();
             loadAccountByEmailRepository.mockAccount = undefined;
             const input = mockInput();
-            const model = await sut.auth(input);
-            expect(model).toBeUndefined();
+            const token = await sut.auth(input);
+            expect(token).toBeUndefined();
         });
     });
     describe('HashComparer', () => {
@@ -69,8 +69,8 @@ describe('DbAuthentication', () => {
             const { sut, hashComparer } = makeSut();
             hashComparer.result = false;
             const input = mockInput();
-            const model = await sut.auth(input);
-            expect(model).toBeUndefined();
+            const token = await sut.auth(input);
+            expect(token).toBeUndefined();
         });
     });
     describe('Encrypter', () => {
@@ -87,5 +87,11 @@ describe('DbAuthentication', () => {
             const promise = sut.auth(input);
             await expect(promise).rejects.toThrow();
         });
+    });
+    it ('Deve retonar um token em caso de sucesso', async () => {
+        const { sut, encrypter } = makeSut();
+        const input = mockInput();
+        const token = await sut.auth(input);
+        expect(encrypter.encryptResult).toBe(token);
     });
 });
