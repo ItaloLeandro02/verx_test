@@ -2,7 +2,7 @@ import { HttpRequest } from "@/presentation/protocols";
 import { SampleAnalysisSpy, ValidationSpy } from '@/presentation/test';
 import { SampleAnalysisController } from '@/presentation/controllers/sample/SampleAnalysisController';
 import { InvalidParamError } from "@/presentation/errors";
-import { badRequest, serverError } from "@/presentation/helpers/http";
+import { badRequest, ok, serverError } from "@/presentation/helpers/http";
 
 type SutTypes = {
     sut: SampleAnalysisController,
@@ -76,6 +76,16 @@ describe('SampleAnalysisController', () => {
             const httpRequest = makeHttpRequest();
             const httpResponse = await sut.handle(httpRequest);
             expect(httpResponse).toEqual(serverError(new Error()));
+        });
+        it ('Deve retornar 200 com o laudo positivo', async () => {
+            const { sut, sampleAnalysis } = makeSut();
+            sampleAnalysis.analyseResult = "positivo";
+            const httpRequest = makeHttpRequest();
+            const httpResponse = await sut.handle(httpRequest);
+            expect(httpResponse).toEqual(ok({
+                codigo_amostra: sampleAnalysis.requestParams.codigo_amostra,
+                result: "positivo"
+            }));
         });
     });
 });
