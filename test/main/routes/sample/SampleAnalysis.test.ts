@@ -1,7 +1,7 @@
 import request from 'supertest'
 import { KnexHelper } from '@/infra/db/knex/helper/KnexHelper';
 import { SampleAnalyzeParams } from '@/domain/usercases/sample';
-import { InvalidParamError } from '@/presentation/errors';
+import { InvalidParamError, MissingParamError } from '@/presentation/errors';
 
 const mockSampleAnalyzeParams = (): SampleAnalyzeParams => ({
     codigoAmostra: "02383322",
@@ -47,6 +47,19 @@ describe('Sample Routes', () => {
             expect(response.status).toBe(400);
             expect(response.body).toEqual({ 
                 error: new InvalidParamError('codigoAmostra').message
+            });
+        });
+        it ('Deve retornar 400 caso o código de amostra não seja enviado', async () => {
+            const httpRequest = {
+                ...mockSampleAnalyzeParams(),
+                codigoAmostra: undefined
+            };
+            const response = await request(app)
+            .post('/api/sample-analysis')
+            .send(httpRequest);
+            expect(response.status).toBe(400);
+            expect(response.body).toEqual({ 
+                error: new MissingParamError('codigoAmostra').message
             });
         });
     });
