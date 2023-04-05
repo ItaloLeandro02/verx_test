@@ -1,51 +1,51 @@
 import { faker } from "@faker-js/faker";
-import { DecrypterSpy } from "@/data/test";
+import { TokenCheckerSpy } from "@/data/test";
 import { LoadAccountByTokenRepositorySpy } from "@/data/test/LoadAccountByTokenRepositorySpy";
 import { DbLoadAccountByToken } from "@/data/usecases/account/DbLoadAccountByToken";
 
 type SutTypes = { 
     sut: DbLoadAccountByToken,
-    decrypter: DecrypterSpy,
+    tokenChecker: TokenCheckerSpy,
     loadAccountByTokenRepository: LoadAccountByTokenRepositorySpy
 };
 
 const makeSut = (): SutTypes => {
-    const decrypter = new DecrypterSpy(); 
+    const tokenChecker = new TokenCheckerSpy(); 
     const loadAccountByTokenRepository = new LoadAccountByTokenRepositorySpy(); 
-    const sut = new DbLoadAccountByToken(decrypter, loadAccountByTokenRepository);
+    const sut = new DbLoadAccountByToken(tokenChecker, loadAccountByTokenRepository);
     return {
         sut,
-        decrypter,
+        tokenChecker,
         loadAccountByTokenRepository
     }
 };
 const token = faker.internet.password();
 
 describe('DbLoadAccountByToken', () => {
-    describe('Decrypter', () => {
-        it ('Deve chamar Decrypter com os valores corretos', async () => {
-            const { sut, decrypter } = makeSut();
+    describe('TokenChecker', () => {
+        it ('Deve chamar TokenCheckerSpy com os valores corretos', async () => {
+            const { sut, tokenChecker } = makeSut();
             await sut.load(token);
-            expect(decrypter.encryptedTextParam).toBe(token);
+            expect(tokenChecker.tokenParam).toBe(token);
         });
-        it ('Deve retornar undefined caso Decrypter retorne undefined', async () => {
-            const { sut, decrypter } = makeSut();
-            decrypter.decryptedTextResult = undefined;
+        it ('Deve retornar undefined caso TokenCheckerSpy retorne undefined', async () => {
+            const { sut, tokenChecker } = makeSut();
+            tokenChecker.result = false;
             const account = await sut.load(token);
             expect(account).toBeUndefined();
         });
-        it ('Deve retornar uma exceção caso Decrypter falhe', async () => {
-            const { sut, decrypter } = makeSut();
-            jest.spyOn(decrypter, 'decrypt').mockImplementationOnce(() => { throw new Error() });
+        it ('Deve retornar uma exceção caso TokenCheckerSpy falhe', async () => {
+            const { sut, tokenChecker } = makeSut();
+            jest.spyOn(tokenChecker, 'verify').mockImplementationOnce(() => { throw new Error() });
             const promise = sut.load(token);
             await expect(promise).rejects.toThrowError(new Error());
         });
     });
     describe('LoadAccountByTokenRepository', () => {
         it ('Deve chamar LoadAccountByTokenRepository com os valores corretos', async () => {
-            const { sut, loadAccountByTokenRepository, decrypter } = makeSut();
+            const { sut, loadAccountByTokenRepository, tokenChecker } = makeSut();
             await sut.load(token);
-            expect(loadAccountByTokenRepository.tokenParam).toBe(decrypter.decryptedTextResult);
+            expect(loadAccountByTokenRepository.tokenParam).toBe(tokenChecker.tokenParam);
         });
         it ('Deve retornar undefined caso LoadAccountByTokenRepository retorne undefined', async () => {
             const { sut, loadAccountByTokenRepository } = makeSut();
@@ -61,9 +61,8 @@ describe('DbLoadAccountByToken', () => {
         });
     });
     it ('Deve retornar um account em caso de sucesso', async () => {
-        const { sut, loadAccountByTokenRepository, decrypter } = makeSut();
+        const { sut, loadAccountByTokenRepository, tokenChecker } = makeSut();
         const account = await sut.load(token);
         expect(account).toEqual(loadAccountByTokenRepository.mockAccount);
-        expect(loadAccountByTokenRepository.tokenParam).toEqual(decrypter.decryptedTextResult);
     });
 });

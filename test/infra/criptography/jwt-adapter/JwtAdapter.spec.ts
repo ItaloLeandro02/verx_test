@@ -3,11 +3,11 @@ import { faker } from "@faker-js/faker";
 import { JwtAdapter } from "@/infra/criptography/jwt-adapter/JwtAdapter";
 
 jest.mock('jsonwebtoken', () => ({
-    sign (): Promise<string> {
+    sign (): Promise<Object> {
         return Promise.resolve('any_token');
     },
-    verify (): Promise<string> {
-        return Promise.resolve('decrypted_text');
+    verify (): Promise<Object> {
+        return Promise.resolve({ iat: 12321 });
     }
 }));
 
@@ -34,16 +34,16 @@ describe('JwtAdapter', () => {
         });
     });
     describe('verify()', () => {
-        it ('Deve chamar verigy com os dados corretos', async () => {
+        it ('Deve chamar verify com os dados corretos', async () => {
             const verifySpy = jest.spyOn(jwt, 'verify');
             const sut = new JwtAdapter(secret);
-            await sut.decrypt('any_token');
+            await sut.verify('any_token');
             expect(verifySpy).toHaveBeenCalledWith('any_token', secret);
         }); 
         it ('Deve retornar um valor em caso de sucesso', async () => {
             const sut = new JwtAdapter(secret);
-            const value = await sut.decrypt('any_token');
-            expect(value).toBe('decrypted_text');
+            const value = await sut.verify('any_token');
+            expect(value).toBe(true);
         });
     });
 });

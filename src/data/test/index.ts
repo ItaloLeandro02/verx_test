@@ -5,4 +5,4 @@ export * from "./UpdateAccessTokenRepositorySpy";
 export * from "./LoadSampleCutOffScoreRepositorySpy";
 export * from "./CalculateSampleResultSpy";
 export * from "./SaveSampleRepositorySpy";
-export * from "./DecrypterSpy";
+export * from "./TokenCheckerSpy";

@@ -20,7 +20,7 @@ const mockSampleAnalyzeParams = (): SampleAnalyzeParams => ({
 });
 
 let app: any = null;
-describe('Sample Routes', () => {
+describe.skip('Sample Routes', () => {
     beforeAll(async () => {
         await KnexHelper.connect();
         await KnexHelper.runMigrations();

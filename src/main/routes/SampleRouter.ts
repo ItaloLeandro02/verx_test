@@ -15,10 +15,10 @@ export default (router: Router): void => {
         const httpRequest: HttpRequest = {
             headers: req.headers
         };
-        const decrypter = new JwtAdapter(env.jwtSecret);
+        const tokenCheck = new JwtAdapter(env.jwtSecret);
         const connection = KnexHelper.connection;
         const repository = new AccountKnexRepository(connection);
-        const dbLoadAccountByToken = new DbLoadAccountByToken(decrypter, repository);
+        const dbLoadAccountByToken = new DbLoadAccountByToken(tokenCheck, repository);
         const middleware = new AuthMiddleware(dbLoadAccountByToken);
         const httpResponse = await middleware.handle(httpRequest);
         if (httpResponse.statusCode === 200) {

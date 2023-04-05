@@ -40,7 +40,7 @@ const makeHttpRequest = (): HttpRequest => {
     }
 }
 
-describe.only('SampleAnalysisController', () => {
+describe('SampleAnalysisController', () => {
     describe('Validation', () => {
         it ('Deve chamar Validation com os dados corretos', async () => {
             const { sut, validation } = makeSut();

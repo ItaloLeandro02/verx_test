@@ -1,3 +1,3 @@
 export * from "./Encrypter";
-export * from "./Decrypter";
+export * from "./TokenChecker";
 export * from "./HashComparer";
