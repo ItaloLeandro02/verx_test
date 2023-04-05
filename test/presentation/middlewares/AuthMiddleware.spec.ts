@@ -1,5 +1,5 @@
 import { AccessDeniedError } from "@/presentation/errors";
-import { forbidden, serverError } from "@/presentation/helpers/http";
+import { forbidden, ok, serverError } from "@/presentation/helpers/http";
 import { AuthMiddleware } from "@/presentation/middlewares";
 import { HttpRequest } from "@/presentation/protocols";
 import { LoadAccountByTokenSpy } from "@/presentation/test";
@@ -48,6 +48,12 @@ describe('Auth Middleware', () => {
             const httpRequest = mockRequest();
             const httpResponse = await sut.handle(httpRequest);
             expect(httpResponse).toEqual(serverError(new Error()))
+        });
+        it ('Deve retornar 200 caso LoadAccountByToken retorne um account', async () => {
+            const { sut, loadAccountByToken } = makeSut();
+            const httpRequest = mockRequest();
+            const httpResponse = await sut.handle(httpRequest);
+            expect(httpResponse).toEqual(ok({ id: loadAccountByToken.mockAccountModel?.id }));
         });
     });
 });
