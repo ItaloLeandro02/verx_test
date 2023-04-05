@@ -20,6 +20,7 @@ describe('Login Routes', () => {
     });
     afterAll(async () => {
         await KnexHelper.roolbackMigrations();
+        await KnexHelper.disconnect();
     });
 
     describe('POST / login', () => {

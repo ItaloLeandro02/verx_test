@@ -29,6 +29,7 @@ describe('AccountKnexRepository', () => {
     });
     afterAll(async () => {
         await KnexHelper.roolbackMigrations();
+        await KnexHelper.disconnect();
     });
 
     describe('LoadAccountByEmailRepository', () => {
