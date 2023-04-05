@@ -1,18 +1,22 @@
-import { DecrypterSpy } from "@/data/test";
-import { DbLoadAccountByToken } from "@/data/usecases/account/DbLoadAccountByToken";
 import { faker } from "@faker-js/faker";
+import { DecrypterSpy } from "@/data/test";
+import { LoadAccountByTokenRepositorySpy } from "@/data/test/LoadAccountByTokenRepositorySpy";
+import { DbLoadAccountByToken } from "@/data/usecases/account/DbLoadAccountByToken";
 
 type SutTypes = { 
     sut: DbLoadAccountByToken,
-    decrypter: DecrypterSpy
+    decrypter: DecrypterSpy,
+    loadAccountByTokenRepository: LoadAccountByTokenRepositorySpy
 };
 
 const makeSut = (): SutTypes => {
     const decrypter = new DecrypterSpy(); 
-    const sut = new DbLoadAccountByToken(decrypter);
+    const loadAccountByTokenRepository = new LoadAccountByTokenRepositorySpy(); 
+    const sut = new DbLoadAccountByToken(decrypter, loadAccountByTokenRepository);
     return {
         sut,
-        decrypter
+        decrypter,
+        loadAccountByTokenRepository
     }
 };
 const mockInput = () => ({
@@ -40,6 +44,14 @@ describe('DbLoadAccountByToken', () => {
             const input = mockInput();
             const promise = sut.load(input.accessToken);
             await expect(promise).rejects.toThrowError(new Error());
+        });
+    });
+    describe('LoadAccountByTokenRepository', () => {
+        it ('Deve chamar LoadAccountByTokenRepository com os valores corretos', async () => {
+            const { sut, loadAccountByTokenRepository, decrypter } = makeSut();
+            const input = mockInput();
+            await sut.load(input.accessToken);
+            expect(loadAccountByTokenRepository.tokenParam).toBe(decrypter.decryptedTextResult);
         });
     });
 });
