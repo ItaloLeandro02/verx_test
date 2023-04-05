@@ -8,6 +8,12 @@ export const KnexHelper = {
         const env = process.env.NODE_ENV || 'development';
         this.connection = knex(config[env]);
     },
+     getConnection (): Knex {
+        if (!this.connection) {
+            this.connect();
+        }
+        return this.connection;
+    },
     async runMigrations (): Promise<void> {
         await this.connection.migrate.latest();
     },
