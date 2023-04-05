@@ -27,5 +27,12 @@ describe('DbLoadAccountByToken', () => {
             await sut.load(input.accessToken);
             expect(decrypter.encryptedTextParam).toBe(input.accessToken);
         });
+        it ('Deve retornar undefined caso Decrypter retorne undefined', async () => {
+            const { sut, decrypter } = makeSut();
+            decrypter.decryptedTextResult = undefined;
+            const input = mockInput();
+            const account = await sut.load(input.accessToken);
+            expect(account).toBeUndefined();
+        });
     });
 });
