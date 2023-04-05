@@ -1,7 +1,7 @@
 import { InvalidParamError } from "@/presentation/errors";
 import { Validation } from "@/presentation/protocols";
 
-export class GreaterThanFieldValidation implements Validation {
+export class LessThanFieldValidation implements Validation {
     constructor(
         private readonly fieldName: string,
         private readonly fieldLength: number
@@ -9,7 +9,7 @@ export class GreaterThanFieldValidation implements Validation {
 
     validate(input: any): Error | undefined {
         const inputFieldTrim = input[this.fieldName]?.toString().trim();
-        if (inputFieldTrim.length < this.fieldLength) {
+        if (inputFieldTrim.length > this.fieldLength) {
             return new InvalidParamError(this.fieldName);
         }
     }
