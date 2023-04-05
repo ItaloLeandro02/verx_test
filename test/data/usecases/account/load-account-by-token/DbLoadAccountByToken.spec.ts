@@ -60,5 +60,12 @@ describe('DbLoadAccountByToken', () => {
             const account = await sut.load(input.accessToken);
             expect(account).toBeUndefined();
         });
+        it ('Deve retornar uma exceção caso LoadAccountByTokenRepository falhe', async () => {
+            const { sut, loadAccountByTokenRepository } = makeSut();
+            jest.spyOn(loadAccountByTokenRepository, 'loadBytoken').mockImplementationOnce(() => { throw new Error() });
+            const input = mockInput();
+            const promise = sut.load(input.accessToken);
+            await expect(promise).rejects.toThrowError(new Error());
+        });
     });
 });
