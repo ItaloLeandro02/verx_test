@@ -1,5 +1,6 @@
 import { AccountKnexRepository } from "@/infra/db/knex/account/AccountKnexRepository";
 import { KnexHelper } from "@/infra/db/knex/helper/KnexHelper";
+import { faker } from "@faker-js/faker";
 
 type SutTypes = {
     sut: AccountKnexRepository
@@ -57,6 +58,25 @@ describe('AccountKnexRepository', () => {
             const account2: any = await sut.loadByEmail(defaultAccount.email);
             expect(account2).toBeTruthy();
             expect(account2.accessToken).toBe('any_token');
+        });
+    });
+    describe('LoadAccountByTokenRepository', () => {
+        it ('Deve retornar um account caso exista um registro no banco com o token informado', async () => {
+            const { sut } = makeSut();
+            const token = faker.internet.password();
+            const saveParams = {
+                name: faker.name.fullName(),
+                email: faker.internet.email(),
+                password: faker.internet.password(),
+                accessToken: token
+            };
+            await KnexHelper.connection('accounts').insert(saveParams);
+            const account = await sut.loadBytoken(token);
+            expect(account).toBeTruthy();
+            expect(account?.id).toBeTruthy();
+            expect(account?.name).toEqual(saveParams.name);
+            expect(account?.email).toEqual(saveParams.email);
+            expect(account?.password).toEqual(saveParams.password);
         });
     });
 });
