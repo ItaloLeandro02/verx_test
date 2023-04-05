@@ -14,8 +14,8 @@ export class SampleAnalysisController implements Controller {
             if (error) {
                 return badRequest(error);
             }
-            await this.sampleAnalysis.analyze(httpRequest.body);
-            return Promise.resolve(ok());
+            const result = await this.sampleAnalysis.analyze(httpRequest.body);
+            return Promise.resolve(ok(result));
        } catch (error) {
             return serverError(error);
        }
