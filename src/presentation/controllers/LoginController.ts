@@ -1,5 +1,5 @@
 import { Controller, HttpRequest, HttpResponse, Validation } from "@/presentation/protocols";
-import { badRequest, serverError, unauthorized } from "@/presentation/helpers/http";
+import { badRequest, ok, serverError, unauthorized } from "@/presentation/helpers/http";
 import { Authentication } from "@/domain/usercases/account";
 
 export class LoginController implements Controller {
@@ -18,10 +18,7 @@ export class LoginController implements Controller {
             if (!token) {
                 return unauthorized();
             }
-            return {
-                statusCode: 200,
-                body: token
-            };
+            return ok(token);
         } catch (error) {
             return serverError(error);
         }
