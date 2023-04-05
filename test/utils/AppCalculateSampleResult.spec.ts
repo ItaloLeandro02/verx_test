@@ -64,4 +64,34 @@ describe('AppCalculateSampleResult', () => {
         const result = sut.calculate(sampleAnalyze, makeSampleCutOff());
         expect(result).toBe("negativo");
     });
+    it ('Deve retornar positivo caso cocaína esteja com um valor maior do que o permitido e Benzoilecgonina igual ou maior a 0.05', () => {
+        const { sut } = makeSut();
+        const sampleAnalyze = {
+            ...makeSampleAnalyze(),
+            "Cocaína": 0.51,
+            "Benzoilecgonina": 0.05
+        };
+        const result = sut.calculate(sampleAnalyze, makeSampleCutOff());
+        expect(result).toBe("positivo");
+    });
+    it ('Deve retornar positivo caso cocaína esteja com um valor maior do que o permitido e Cocaetileno igual ou maior a 0.05', () => {
+        const { sut } = makeSut();
+        const sampleAnalyze = {
+            ...makeSampleAnalyze(),
+            "Cocaína": 0.51,
+            "Cocaetileno": 0.05
+        };
+        const result = sut.calculate(sampleAnalyze, makeSampleCutOff());
+        expect(result).toBe("positivo");
+    });
+    it ('Deve retornar positivo caso cocaína esteja com um valor maior do que o permitido e Norcocaína igual ou maior a 0.05', () => {
+        const { sut } = makeSut();
+        const sampleAnalyze = {
+            ...makeSampleAnalyze(),
+            "Cocaína": 0.51,
+            "Norcocaína": 0.05
+        };
+        const result = sut.calculate(sampleAnalyze, makeSampleCutOff());
+        expect(result).toBe("positivo");
+    });
 })
