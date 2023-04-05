@@ -78,5 +78,12 @@ describe('DbSampleAnalysis', () => {
             expect(saveSampleRepository.sampleResultParams).toEqual(calculateSampleResult.mockResult);
             expect(saveSampleRepository.sampleAnalyzeParams).toEqual(input);
         });
+        it ('Deve retornar uma exceção caso SaveSampleRepository falhe', async () => {
+            const { sut, saveSampleRepository } = makeSut();
+            jest.spyOn(saveSampleRepository, 'saveSample').mockImplementationOnce(() => { throw new Error() });
+            const input = mockInput();
+            const promise = sut.analyze(input);
+            await expect(promise).rejects.toThrow();
+        });
     });
 });
