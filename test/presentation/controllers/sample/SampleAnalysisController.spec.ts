@@ -70,5 +70,12 @@ describe('SampleAnalysisController', () => {
             await sut.handle(httpRequest);
             expect(sampleAnalysis.requestParams).toEqual(httpRequest.body);
         });
+        it ('Deve retornar 500 caso SampleAnalysis lance uma exceção', async () => {
+            const { sut, sampleAnalysis } = makeSut();
+            jest.spyOn(sampleAnalysis, 'analyze').mockImplementationOnce(() => { throw new Error() });
+            const httpRequest = makeHttpRequest();
+            const httpResponse = await sut.handle(httpRequest);
+            expect(httpResponse).toEqual(serverError(new Error()));
+        });
     });
 });
