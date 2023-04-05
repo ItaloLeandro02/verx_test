@@ -23,10 +23,11 @@ export default (router: Router): void => {
         const httpResponse = await middleware.handle(httpRequest);
         if (httpResponse.statusCode === 200) {
             next();
+        } else {
+            res.status(httpResponse.statusCode).json({
+                error: httpResponse.body.message
+            });
         }
-        res.status(httpResponse.statusCode).json({
-            error: httpResponse.body.message
-        });
     }, 
     adaptRoute(makeSampleAnalysisController()));
 }
