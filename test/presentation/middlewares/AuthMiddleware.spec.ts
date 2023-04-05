@@ -36,5 +36,11 @@ describe('Auth Middleware', () => {
             await sut.handle(httpRequest);
             expect(loadAccountByToken.acessTokenParam).toEqual(httpRequest.headers['x-access-token']);
         });
+        it ('Deve retornar 403 caso LoadAccountByToken retorne undefined', async () => {
+            const { sut, loadAccountByToken } = makeSut();
+            loadAccountByToken.mockAccountModel = undefined;
+            const httpResponse = await sut.handle({});
+            expect(httpResponse).toEqual(forbidden(new AccessDeniedError()));
+        });
     });
 });
