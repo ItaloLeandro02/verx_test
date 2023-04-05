@@ -23,6 +23,15 @@ describe('Login Routes', () => {
     });
 
     describe('POST / login', () => {
+        it ('Deve retornar 200 em caso de sucesso', async () => {
+            await request(app)
+            .post('/api/login')
+            .send({
+                email: defaultAccount.email,
+                password: defaultAccount.password
+            })
+            .expect(200)
+        });
         it ('Deve retornar 401 caso as credencias não sejam válidas', async () => {
             await request(app)
             .post('/api/login')
