@@ -1,20 +1,23 @@
 import { HttpRequest } from "@/presentation/protocols";
-import { ValidationSpy } from '@/presentation/test';
+import { SampleAnalysisSpy, ValidationSpy } from '@/presentation/test';
 import { SampleAnalysisController } from '@/presentation/controllers/sample/SampleAnalysisController';
 import { InvalidParamError } from "@/presentation/errors";
 import { badRequest, serverError } from "@/presentation/helpers/http";
 
 type SutTypes = {
     sut: SampleAnalysisController,
-    validation: ValidationSpy
+    validation: ValidationSpy,
+    sampleAnalysis: SampleAnalysisSpy
 };
 
 const makeSut = (): SutTypes => {
     const validation = new ValidationSpy();
-    const sut = new SampleAnalysisController(validation);
+    const sampleAnalysis = new SampleAnalysisSpy();
+    const sut = new SampleAnalysisController(validation, sampleAnalysis);
     return {
         sut,
-        validation
+        validation,
+        sampleAnalysis
     };
 };
 const makeHttpRequest = (): HttpRequest => {
@@ -58,6 +61,14 @@ describe('SampleAnalysisController', () => {
             const httpRequest = makeHttpRequest();
             const httpResponse = await sut.handle(httpRequest);
             expect(httpResponse).toEqual(serverError(new Error()));
+        });
+    });
+    describe('SampleAnalysis', () => {
+        it ('Deve chamar SampleAnalysis com os dados corretos', async () => {
+            const { sut, sampleAnalysis } = makeSut();
+            const httpRequest = makeHttpRequest();
+            await sut.handle(httpRequest);
+            expect(sampleAnalysis.requestParams).toEqual(httpRequest.body);
         });
     });
 });
