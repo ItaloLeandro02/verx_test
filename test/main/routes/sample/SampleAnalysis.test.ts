@@ -87,5 +87,47 @@ describe('Sample Routes', () => {
                 result: "positivo"
             });
         });
+        it ('Deve retornar 200 com o resultado do laudo sendo positivo, cocaína cima do padrão juntamente com benzoilecgonina', async () => {
+            const httpRequest = {
+                ...mockSampleAnalyzeParams(),
+                benzoilecgonina: 0.5
+            };
+            const response = await request(app)
+            .post('/api/sample-analysis')
+            .send(httpRequest);
+            expect(response.status).toBe(200);
+            expect(response.body).toEqual({ 
+                codigoAmostra: httpRequest.codigoAmostra,
+                result: "positivo"
+            });
+        });
+        it ('Deve retornar 200 com o resultado do laudo sendo positivo, cocaína cima do padrão juntamente com cocaetileno', async () => {
+            const httpRequest = {
+                ...mockSampleAnalyzeParams(),
+                cocaetileno: 0.5
+            };
+            const response = await request(app)
+            .post('/api/sample-analysis')
+            .send(httpRequest);
+            expect(response.status).toBe(200);
+            expect(response.body).toEqual({ 
+                codigoAmostra: httpRequest.codigoAmostra,
+                result: "positivo"
+            });
+        });
+        it ('Deve retornar 200 com o resultado do laudo sendo positivo, cocaína cima do padrão juntamente com norcocaina', async () => {
+            const httpRequest = {
+                ...mockSampleAnalyzeParams(),
+                norcocaina: 0.5
+            };
+            const response = await request(app)
+            .post('/api/sample-analysis')
+            .send(httpRequest);
+            expect(response.status).toBe(200);
+            expect(response.body).toEqual({ 
+                codigoAmostra: httpRequest.codigoAmostra,
+                result: "positivo"
+            });
+        });
     });
 });
