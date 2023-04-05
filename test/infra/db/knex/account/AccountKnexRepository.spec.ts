@@ -6,8 +6,7 @@ type SutTypes = {
 };
 
 const makeSut = (): SutTypes => {
-    const connection = KnexHelper.connection;
-    const sut = new AccountKnexRepository(connection);
+    const sut = new AccountKnexRepository();
     return {
         sut
     };
