@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { LoginController } from "@/presentation/controllers/LoginController";
+import { LoginController } from "@/presentation/controllers/accounts/LoginController";
 import { HttpRequest } from "@/presentation/protocols";
 import { AuthenticationSpy, ValidationSpy } from '@/presentation/test';
 import { badRequest, serverError, unauthorized } from '@/presentation/helpers/http';
