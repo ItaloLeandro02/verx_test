@@ -1,6 +1,8 @@
 import { HttpRequest } from "@/presentation/protocols";
 import { ValidationSpy } from '@/presentation/test/sample';
 import { SampleAnalysisController } from '@/presentation/controllers/sample/SampleAnalysisController';
+import { InvalidParamError } from "@/presentation/errors";
+import { badRequest } from "@/presentation/helpers/http";
 
 type SutTypes = {
     sut: SampleAnalysisController,
@@ -42,6 +44,13 @@ describe('SampleAnalysisController', () => {
             const httpRequest = makeHttpRequest();
             await sut.handle(httpRequest);
             expect(validation.inputParams).toEqual(httpRequest.body);
+        });
+        it ('Deve retornar 400 caso alguma validação falhe', async () => {
+            const { sut, validation } = makeSut();
+            jest.spyOn(validation, 'validate').mockImplementationOnce(() => new InvalidParamError('codigo_amostra'));
+            const httpRequest = makeHttpRequest();
+            const httpResponse = await sut.handle(httpRequest);
+            expect(httpResponse).toEqual(badRequest(new InvalidParamError('codigo_amostra')));
         });
     });
 });
