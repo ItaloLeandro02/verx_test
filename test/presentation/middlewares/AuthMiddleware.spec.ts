@@ -1,5 +1,5 @@
 import { AccessDeniedError } from "@/presentation/errors";
-import { forbidden } from "@/presentation/helpers/http";
+import { forbidden, serverError } from "@/presentation/helpers/http";
 import { AuthMiddleware } from "@/presentation/middlewares";
 import { HttpRequest } from "@/presentation/protocols";
 import { LoadAccountByTokenSpy } from "@/presentation/test";
@@ -41,6 +41,13 @@ describe('Auth Middleware', () => {
             loadAccountByToken.mockAccountModel = undefined;
             const httpResponse = await sut.handle({});
             expect(httpResponse).toEqual(forbidden(new AccessDeniedError()));
+        });
+        it ('Deve retornar 500 caso LoadAccountByToken falhe', async () => {
+            const { sut, loadAccountByToken } = makeSut();
+            jest.spyOn(loadAccountByToken, 'load').mockImplementationOnce(() => { throw new Error() });
+            const httpRequest = mockRequest();
+            const httpResponse = await sut.handle(httpRequest);
+            expect(httpResponse).toEqual(serverError(new Error()))
         });
     });
 });
