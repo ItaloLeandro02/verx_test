@@ -78,5 +78,11 @@ describe('AccountKnexRepository', () => {
             expect(account?.email).toEqual(saveParams.email);
             expect(account?.password).toEqual(saveParams.password);
         });
+        it ('Deve retornar undefined caso não exista um registro no banco com o token informado', async () => {
+            const { sut } = makeSut();
+            const token = faker.internet.password();
+            const account = await sut.loadBytoken(token);
+            expect(account).toBeUndefined();
+        });
     });
 });
