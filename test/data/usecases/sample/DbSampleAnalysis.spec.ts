@@ -1,21 +1,24 @@
-import { CalculateSampleResultSpy, LoadSampleCutOffScoreRepositorySpy } from "@/data/test";
+import { CalculateSampleResultSpy, LoadSampleCutOffScoreRepositorySpy, SaveSampleRepositorySpy } from "@/data/test";
 import { DbSampleAnalysis } from "@/data/usecases/sample/DbSampleAnalysis";
 import { SampleAnalyzeParams } from "@/domain/usercases/sample";
 
 type SutTypes = { 
     sut: DbSampleAnalysis,
     loadSampleCutOffScoreRepository: LoadSampleCutOffScoreRepositorySpy,
-    calculateSampleResult: CalculateSampleResultSpy
+    calculateSampleResult: CalculateSampleResultSpy,
+    saveSampleRepository: SaveSampleRepositorySpy
 };
 
 const makeSut = (): SutTypes => {
     const loadSampleCutOffScoreRepository = new LoadSampleCutOffScoreRepositorySpy(); 
     const calculateSampleResult = new CalculateSampleResultSpy(); 
-    const sut = new DbSampleAnalysis(loadSampleCutOffScoreRepository, calculateSampleResult);
+    const saveSampleRepository = new SaveSampleRepositorySpy(); 
+    const sut = new DbSampleAnalysis(loadSampleCutOffScoreRepository, calculateSampleResult, saveSampleRepository);
     return {
         sut,
         loadSampleCutOffScoreRepository,
-        calculateSampleResult
+        calculateSampleResult, 
+        saveSampleRepository
     }
 };
 const mockInput = (): SampleAnalyzeParams => ({
@@ -65,6 +68,15 @@ describe('DbSampleAnalysis', () => {
             const input = mockInput();
             const promise = sut.analyze(input);
             await expect(promise).rejects.toThrow();
+        });
+    });
+    describe('SaveSampleRepository', () => {
+        it ('Deve chamar SaveSampleRepository com os valores corretos', async () => {
+            const { sut, calculateSampleResult, saveSampleRepository } = makeSut();
+            const input = mockInput();
+            await sut.analyze(input);
+            expect(saveSampleRepository.sampleResultParams).toEqual(calculateSampleResult.mockResult);
+            expect(saveSampleRepository.sampleAnalyzeParams).toEqual(input);
         });
     });
 });
