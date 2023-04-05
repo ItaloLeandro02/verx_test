@@ -7,7 +7,7 @@ export class SampleAnalysisSpy implements SampleAnalysis {
     async analyze(sampleAnalyzeParams: SampleAnalyzeParams): Promise<SampleAnalyzeResult> {
         this.requestParams = sampleAnalyzeParams;
         return Promise.resolve({
-            codigo_amostra: sampleAnalyzeParams.codigo_amostra,
+            codigoAmostra: sampleAnalyzeParams.codigoAmostra,
             result: this.analyseResult
         });
     }

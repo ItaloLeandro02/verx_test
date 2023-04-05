@@ -11,7 +11,7 @@ export class AppCalculateSampleResult implements CalculateSampleResult {
             const drugValue = sampleAnalyze[itemCode as keyof SampleAnalyzeParams]; 
             if (typeof drugValue === 'number') {
                 const isAllowed = drugValue > itemCutOffScore;
-                if (isAllowed && (itemCode !== 'Cocaína' || this.verifyCocainaCase(sampleAnalyze))) {
+                if (isAllowed && (itemCode !== 'cocaina' || this.verifyCocainaCase(sampleAnalyze))) {
                     result = isAllowed;
                     break;
                 }
@@ -20,7 +20,7 @@ export class AppCalculateSampleResult implements CalculateSampleResult {
         return result ? "positivo" : "negativo";
     }
     private verifyCocainaCase(sampleAnalyze: SampleAnalyzeParams): boolean {
-        const drugsToVerify = ['Benzoilecgonina', 'Cocaetileno', 'Norcocaína'];
+        const drugsToVerify = ['benzoilecgonina', 'cocaetileno', 'norcocaina'];
         return drugsToVerify.some(drugCode => {
             const sampleDrugValue = sampleAnalyze[drugCode as keyof SampleAnalyzeParams]; 
             if (typeof sampleDrugValue === 'number') {

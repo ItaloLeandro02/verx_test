@@ -13,30 +13,31 @@ const makeSut = (): SutTypes => {
     };
 };
 const makeSampleAnalyze = (): SampleAnalyzeParams => ({
-    "codigo_amostra": "02383322",
-    "Cocaína": 0.5,
-    "Anfetamina": 0.1,
-    "Metanfetamina": 0.1,
-    "MDA": 0.1,
-    "MDMA": 0,
-    "THC": 0.01,
-    "Morfina": 0.01,
-    "Codeína": 0.01,
-    "Heroína": 0.01,
-    "Benzoilecgonina": 0,
-    "Cocaetileno": 0,
-    "Norcocaína": 0
+    codigoAmostra: "02383322",
+    cocaina: 0.5,
+    anfetamina: 0.1,
+    metanfetamina: 0.1,
+    mda: 0.1,
+    mdma: 0,
+    thc: 0.01,
+    morfina: 0.01,
+    codeina: 0.01,
+    heroina: 0.01,
+    benzoilecgonina: 0,
+    cocaetileno: 0,
+    norcocaina: 0
 });
 const makeSampleCutOff = (): SampleCutOffScore => ({
-    "Cocaína": 0.5,
-    "Anfetamina": 0.1,
-    "Metanfetamina": 0.1,
-    "MDA": 0.1,
-    "MDMA": 0.02,
-    "THC": 0.05,
-    "Morfina": 0.05,
-    "Codeína": 0.02,
-    "Heroína": 0.02    
+    id: 1,
+    cocaina: 0.5,
+    anfetamina: 0.1,
+    metanfetamina: 0.1,
+    mda: 0.1,
+    mdma: 0.02,
+    thc: 0.05,
+    morfina: 0.05,
+    codeina: 0.02,
+    heroina: 0.02
 }); 
 
 describe('AppCalculateSampleResult', () => {
@@ -49,17 +50,17 @@ describe('AppCalculateSampleResult', () => {
         const { sut } = makeSut();
         const sampleAnalyze = {
             ...makeSampleAnalyze(),
-            "Morfina": 0.06,
-            "Heroína": 0
+            morfina: 0.06,
+            heroina: 0
         };
         const result = sut.calculate(sampleAnalyze, makeSampleCutOff());
         expect(result).toBe("positivo");
     });
-    it ('Deve retornar negativo caso cocaína esteja com um valor maior do que o permitido, mas com : Benzoilecgonina, Cocaetileno ou Norcocaína com valores menores que 0.05', () => {
+    it ('Deve retornar negativo caso cocaína esteja com um valor maior do que o permitido, mas com: Benzoilecgonina, Cocaetileno ou Norcocaína com valores menores que 0.05', () => {
         const { sut } = makeSut();
         const sampleAnalyze = {
             ...makeSampleAnalyze(),
-            "Cocaína": 0.51
+            cocaina: 0.51
         };
         const result = sut.calculate(sampleAnalyze, makeSampleCutOff());
         expect(result).toBe("negativo");
@@ -68,8 +69,8 @@ describe('AppCalculateSampleResult', () => {
         const { sut } = makeSut();
         const sampleAnalyze = {
             ...makeSampleAnalyze(),
-            "Cocaína": 0.51,
-            "Benzoilecgonina": 0.05
+            cocaina: 0.51,
+            benzoilecgonina: 0.05
         };
         const result = sut.calculate(sampleAnalyze, makeSampleCutOff());
         expect(result).toBe("positivo");
@@ -78,8 +79,8 @@ describe('AppCalculateSampleResult', () => {
         const { sut } = makeSut();
         const sampleAnalyze = {
             ...makeSampleAnalyze(),
-            "Cocaína": 0.51,
-            "Cocaetileno": 0.05
+            cocaina: 0.51,
+            cocaetileno: 0.05
         };
         const result = sut.calculate(sampleAnalyze, makeSampleCutOff());
         expect(result).toBe("positivo");
@@ -88,8 +89,8 @@ describe('AppCalculateSampleResult', () => {
         const { sut } = makeSut();
         const sampleAnalyze = {
             ...makeSampleAnalyze(),
-            "Cocaína": 0.51,
-            "Norcocaína": 0.05
+            cocaina: 0.51,
+            norcocaina: 0.05
         };
         const result = sut.calculate(sampleAnalyze, makeSampleCutOff());
         expect(result).toBe("positivo");

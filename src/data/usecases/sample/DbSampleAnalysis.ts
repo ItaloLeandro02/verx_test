@@ -13,7 +13,7 @@ export class DbSampleAnalysis implements SampleAnalysis {
         const result = this.calculateSampleResult.calculate(sampleAnalyzeParams, sampleCuttOff);
         await this.saveSampleRepository.saveSample(sampleAnalyzeParams, result);
         return {
-            codigo_amostra: sampleAnalyzeParams.codigo_amostra,
+            codigoAmostra: sampleAnalyzeParams.codigoAmostra,
             result
         };
     }
