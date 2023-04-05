@@ -11,13 +11,11 @@ const makeSut = (): SutTypes => {
         sut
     };
 };
-
 const defaultAccount = {
     id: 1,
     name: 'Verx',
-    email: 'verx@mail.com.br',
-    password: '123345'
-};
+    email: 'verx@mail.com.br'
+};;
 
 describe('AccountKnexRepository', () => {
     beforeAll(async () => {
@@ -40,7 +38,6 @@ describe('AccountKnexRepository', () => {
             expect(account?.id).toBeTruthy();
             expect(account?.name).toBe(defaultAccount.name);
             expect(account?.email).toBe(defaultAccount.email);
-            expect(account?.password).toBe(defaultAccount.password);
         });
         it ('Deve retornar undefined caso não haja nenhum registro no banco com o email informado', async () => {
             const { sut } = makeSut();
