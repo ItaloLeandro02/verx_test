@@ -1,5 +1,4 @@
 import request from 'supertest'
-import app from '@/main/config/app'
 import { KnexHelper } from '@/infra/db/knex/helper/KnexHelper';
 
 const defaultAccount = {
@@ -8,12 +7,13 @@ const defaultAccount = {
     email: 'verx@mail.com.br',
     password: '123345'
 };
-
+let app: any = null;
 describe('Login Routes', () => {
     beforeAll(async () => {
         await KnexHelper.connect();
         await KnexHelper.runMigrations();
         await KnexHelper.runSeeders();
+        app = (await import('@/main/config/app')).default;
     });
     afterEach(async () => {
         await KnexHelper.deleteData('accounts');

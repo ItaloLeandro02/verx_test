@@ -2,10 +2,11 @@ import { Knex } from "knex";
 import { LoadAccountByEmailRepository } from "@/data/protocols/db/account/LoadAccountByEmailRepository";
 import { AccountModel } from "@/domain/models/account/AccountModel";
 import { UpdateAccessTokenRepository } from "@/data/protocols/db/account/UpdateAccessTokenRepository";
-import { KnexHelper } from "../helper/KnexHelper";
 
 export class AccountKnexRepository implements LoadAccountByEmailRepository, UpdateAccessTokenRepository {
-    connection: Knex = KnexHelper.getConnection();
+    constructor(
+        private readonly connection: Knex
+    ) {}
     
     async loadByEmail(email: string): Promise<AccountModel | undefined> {
         const account = await this.connection.select().from<AccountModel>('accounts').where('email', email).first();
