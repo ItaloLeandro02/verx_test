@@ -40,5 +40,12 @@ describe('DbSampleAnalysis', () => {
             await sut.analyze(input);
             expect(loadSampleCutOffScoreRepositorySpy).toHaveBeenCalledTimes(1);
         });
+        it ('Deve retornar uma exceção caso LoadSampleCutOffScoreRepository falhe', async () => {
+            const { sut, loadSampleCutOffScoreRepository } = makeSut();
+            jest.spyOn(loadSampleCutOffScoreRepository, 'loadSampleCutOffScore').mockImplementationOnce(() => { throw new Error() });
+            const input = mockInput();
+            const promise = sut.analyze(input);
+            await expect(promise).rejects.toThrow();
+        });
     });
 });
