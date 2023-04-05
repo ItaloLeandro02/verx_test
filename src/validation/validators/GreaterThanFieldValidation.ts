@@ -8,6 +8,9 @@ export class GreaterThanFieldValidation implements Validation {
     ) {}
 
     validate(input: any): Error | undefined {
-        return new InvalidParamError(this.fieldName);
+        const inputFieldTrim = input[this.fieldName]?.toString().trim();
+        if (inputFieldTrim.length < this.fieldLength) {
+            return new InvalidParamError(this.fieldName);
+        }
     }
 }
