@@ -20,7 +20,7 @@ export class LoginController implements Controller {
             }
             return {
                 statusCode: 200,
-                body: null
+                body: token
             };
         } catch (error) {
             return serverError(error);
