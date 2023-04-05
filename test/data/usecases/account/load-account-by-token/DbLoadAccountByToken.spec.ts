@@ -53,5 +53,12 @@ describe('DbLoadAccountByToken', () => {
             await sut.load(input.accessToken);
             expect(loadAccountByTokenRepository.tokenParam).toBe(decrypter.decryptedTextResult);
         });
+        it ('Deve retornar undefined caso LoadAccountByTokenRepository retorne undefined', async () => {
+            const { sut, loadAccountByTokenRepository } = makeSut();
+            loadAccountByTokenRepository.mockAccount = undefined;
+            const input = mockInput();
+            const account = await sut.load(input.accessToken);
+            expect(account).toBeUndefined();
+        });
     });
 });
