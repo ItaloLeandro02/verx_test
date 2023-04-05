@@ -4,7 +4,7 @@ import { config } from '../../../../../knexfile';
 export const KnexHelper = {
     connection: null as unknown as Knex,
 
-    connect (): void {
+    async connect (): Promise<void> {
         const env = process.env.NODE_ENV || 'development';
         this.connection = knex(config[env]);
     },
