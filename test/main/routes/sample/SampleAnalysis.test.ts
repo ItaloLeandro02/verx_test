@@ -10,7 +10,7 @@ const mockSampleAnalyzeParams = (): SampleAnalyzeParams => ({
     metanfetamina: 0.1,
     mda: 0.1,
     mdma: 0,
-    thc: 0.1,
+    thc: 0.04,
     morfina: 0.1,
     codeina: 0.1,
     heroina: 0.1,
@@ -60,6 +60,17 @@ describe('Sample Routes', () => {
             expect(response.status).toBe(400);
             expect(response.body).toEqual({ 
                 error: new MissingParamError('codigoAmostra').message
+            });
+        });
+        it ('Deve retornar 200 com o resultado do laudo sendo negativo', async () => {
+            const httpRequest = mockSampleAnalyzeParams();
+            const response = await request(app)
+            .post('/api/sample-analysis')
+            .send(httpRequest);
+            expect(response.status).toBe(200);
+            expect(response.body).toEqual({ 
+                codigoAmostra: httpRequest.codigoAmostra,
+                result: "negativo"
             });
         });
     });
