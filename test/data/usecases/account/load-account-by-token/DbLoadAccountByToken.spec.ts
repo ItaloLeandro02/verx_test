@@ -68,4 +68,11 @@ describe('DbLoadAccountByToken', () => {
             await expect(promise).rejects.toThrowError(new Error());
         });
     });
+    it ('Deve retornar um account em caso de sucesso', async () => {
+        const { sut, loadAccountByTokenRepository, decrypter } = makeSut();
+        const input = mockInput();
+        const account = await sut.load(input.accessToken);
+        expect(account).toEqual(loadAccountByTokenRepository.mockAccount);
+        expect(loadAccountByTokenRepository.tokenParam).toEqual(decrypter.decryptedTextResult);
+    });
 });
