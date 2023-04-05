@@ -36,6 +36,16 @@ describe('Sample Routes', () => {
     });
 
     describe('POST / sample-analysis', () => {
+        it ('Deve retornar 403 caso o token não seja informado', async () => {
+            const httpRequest = mockSampleAnalyzeParams(); 
+            const response = await request(app)
+            .post('/api/sample-analysis')
+            .send(httpRequest);
+            expect(response.status).toBe(403);
+            expect(response.body).toEqual({ 
+                error: 'Access denied'
+            });
+        });
         it ('Deve retornar 400 caso o código de amostra seja maior do que oito caracteres', async () => {
             const httpRequest = {
                 ...mockSampleAnalyzeParams(),
