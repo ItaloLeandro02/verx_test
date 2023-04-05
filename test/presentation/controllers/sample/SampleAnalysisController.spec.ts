@@ -1,5 +1,5 @@
 import { HttpRequest } from "@/presentation/protocols";
-import { ValidationSpy } from '@/presentation/test/sample';
+import { ValidationSpy } from '@/presentation/test';
 import { SampleAnalysisController } from '@/presentation/controllers/sample/SampleAnalysisController';
 import { InvalidParamError } from "@/presentation/errors";
 import { badRequest, serverError } from "@/presentation/helpers/http";
