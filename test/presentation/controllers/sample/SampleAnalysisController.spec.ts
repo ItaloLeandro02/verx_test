@@ -87,5 +87,14 @@ describe('SampleAnalysisController', () => {
                 result: "positivo"
             }));
         });
+        it ('Deve retornar 200 com o laudo negativo', async () => {
+            const { sut, sampleAnalysis } = makeSut();
+            const httpRequest = makeHttpRequest();
+            const httpResponse = await sut.handle(httpRequest);
+            expect(httpResponse).toEqual(ok({
+                codigo_amostra: sampleAnalysis.requestParams.codigo_amostra,
+                result: "negativo"
+            }));
+        });
     });
 });
