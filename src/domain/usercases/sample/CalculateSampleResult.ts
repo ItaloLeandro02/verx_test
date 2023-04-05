@@ -2,5 +2,5 @@ import { SampleCutOffScore } from "@/data/protocols/db/sample/LoadSampleCutOffSc
 import { SampleAnalyzeParams } from "@/domain/usercases/sample/SampleAnalysis";
 
 export interface CalculateSampleResult {
-    calculate (sampleAnalyze: SampleAnalyzeParams, sampleCutOff: SampleCutOffScore): Promise<"positivo" | "negativo">;
+    calculate (sampleAnalyze: SampleAnalyzeParams, sampleCutOff: SampleCutOffScore): "positivo" | "negativo";
 }

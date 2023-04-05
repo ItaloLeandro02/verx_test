@@ -6,9 +6,9 @@ export class CalculateSampleResultSpy implements CalculateSampleResult {
     sampleAnalyzeParams: SampleAnalyzeParams = null as unknown as SampleAnalyzeParams;
     sampleCutOffParams: SampleCutOffScore = null as unknown as SampleCutOffScore;
 
-    async calculate(sampleAnalyze: SampleAnalyzeParams, sampleCutOff: SampleCutOffScore): Promise<"positivo" | "negativo"> {
+    calculate(sampleAnalyze: SampleAnalyzeParams, sampleCutOff: SampleCutOffScore): "positivo" | "negativo" {
         this.sampleAnalyzeParams = sampleAnalyze; 
         this.sampleCutOffParams = sampleCutOff; 
-        return Promise.resolve(this.mockResult);
+        return this.mockResult;
     }
 }

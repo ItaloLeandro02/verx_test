@@ -10,7 +10,7 @@ export class DbSampleAnalysis implements SampleAnalysis {
     ) {}
     async analyze(sampleAnalyzeParams: SampleAnalyzeParams): Promise<SampleAnalyzeResult> {
         const sampleCuttOff = await this.loadSampleCutOffScoreRepository.loadSampleCutOffScore();
-        const result = await this.calculateSampleResult.calculate(sampleAnalyzeParams, sampleCuttOff);
+        const result = this.calculateSampleResult.calculate(sampleAnalyzeParams, sampleCuttOff);
         await this.saveSampleRepository.saveSample(sampleAnalyzeParams, result);
         return {
             codigo_amostra: sampleAnalyzeParams.codigo_amostra,
