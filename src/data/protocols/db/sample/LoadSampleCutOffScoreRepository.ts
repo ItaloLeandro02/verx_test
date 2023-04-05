@@ -1,13 +1,14 @@
 export type SampleCutOffScore = {
-    "Cocaína": number,
-    "Anfetamina": number,
-    "Metanfetamina": number,
-    "MDA": number,
-    "MDMA": number,
-    "THC": number,
-    "Morfina": number,
-    "Codeína": number,
-    "Heroína": number    
+    id: number,
+    cocaina: number,
+    anfetamina: number,
+    metanfetamina: number,
+    mda: number,
+    mdma: number,
+    thc: number,
+    morfina: number,
+    codeina: number,
+    heroina: number    
 };
 
 export interface LoadSampleCutOffScoreRepository {
