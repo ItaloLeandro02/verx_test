@@ -1,4 +1,4 @@
-import { ok } from "@/presentation/helpers/http";
+import { badRequest, ok } from "@/presentation/helpers/http";
 import { Controller, HttpRequest, HttpResponse, Validation } from "@/presentation/protocols";
 
 export class SampleAnalysisController implements Controller {
@@ -7,7 +7,10 @@ export class SampleAnalysisController implements Controller {
     ) {}
 
     async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
-        this.validation.validate(httpRequest.body);
+        const error = this.validation.validate(httpRequest.body);
+        if (error) {
+            return badRequest(error);
+        }
         return Promise.resolve(ok());
     }
 }
