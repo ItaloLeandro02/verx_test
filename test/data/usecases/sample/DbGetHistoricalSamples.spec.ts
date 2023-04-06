@@ -47,5 +47,12 @@ describe('DbGetHistoricalSamples', () => {
             await sut.getHistorical(input);
             expect(loadHistoricalsSampleRepository.requestParams).toEqual(pagination.mockResult);
         });
+        it ('Deve retornar uma exceção caso LoadHistoricalsSampleRepository falhe', async () => {
+            const { sut, loadHistoricalsSampleRepository } = makeSut();
+            jest.spyOn(loadHistoricalsSampleRepository, 'loadHistoricals').mockImplementationOnce(() => { throw new Error() });
+            const input = mockInput();
+            const promise = sut.getHistorical(input);
+            await expect(promise).rejects.toThrow();
+        });
     });
 });
