@@ -6,3 +6,4 @@ export * from "./LoadSampleCutOffScoreRepositorySpy";
 export * from "./CalculateSampleResultSpy";
 export * from "./SaveSampleRepositorySpy";
 export * from "./TokenCheckerSpy";
+export * from "./PaginationSpy";

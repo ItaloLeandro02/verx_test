@@ -1,6 +1,6 @@
 export type GetHistoricalSamplesParams = {
-    limit?: number;
-    offset?: number;
+    limit?: string;
+    offset?: string;
 };
 export type HistoricalSample = {
     id: number,
