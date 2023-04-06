@@ -5,9 +5,24 @@ import { resolve } from 'path';
 
 export const config: { [key: string]: Knex.Config } = {
   development: {
-    client: "sqlite3",
+    client: "postgresql",
     connection: {
-      filename: "./dev.sqlite3"
+      database: "verx_development",
+      user: "postgres",
+      password: "12345"
+    },
+    pool: {
+      min: 2,
+      max: 10
+    },
+    migrations: {
+      tableName: "knex_migrations",
+      directory: resolve('src/infra/db/knex/migrations'),
+      extension: 'ts'
+    },
+    seeds: {
+      directory: resolve('src/infra/db/knex/seeds'),
+      extension: 'ts'
     }
   },
 
