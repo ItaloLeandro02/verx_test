@@ -28,5 +28,12 @@ describe('DbGetHistoricalSamples', () => {
             await sut.getHistorical(input);
             expect(pagination.requestParams).toEqual(input);
         });
+        it ('Deve retornar uma exceção caso Pagination falhe', async () => {
+            const { sut, pagination } = makeSut();
+            jest.spyOn(pagination, 'getPaginationInfo').mockImplementationOnce(() => { throw new Error() });
+            const input = mockInput();
+            const promise = sut.getHistorical(input);
+            await expect(promise).rejects.toThrow();
+        });
     });
 });
