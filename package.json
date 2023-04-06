@@ -9,9 +9,11 @@
     "down": "docker-compose down",
     "build": "rimraf dist && tsc",
     "migration:latest": "knex migrate:latest",
+    "migration:latest:docker": "knex migrate:latest --knexfile ./dist/knexfile.js",
     "migration:rollback": "knex migrate:rollback",
     "migration:rollback:all": "npm migration:rollback -- --all",
     "seed:run": "knex seed:run",
+    "seed:run:docker": "knex seed:run --knexfile ./dist/knexfile.js",
     "test": "NODE_ENV=test jest --runInBand",
     "test:unit": "npm test -- --watchAll -c jest-unit-config.ts",
     "test:integration": "npm test -- --watchAll -c jest-integration-config.ts"
