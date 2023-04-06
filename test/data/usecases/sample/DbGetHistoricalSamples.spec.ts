@@ -54,5 +54,11 @@ describe('DbGetHistoricalSamples', () => {
             const promise = sut.getHistorical(input);
             await expect(promise).rejects.toThrow();
         });
+        it ('Deve retornar os históricos de amostra', async () => {
+            const { sut, loadHistoricalsSampleRepository } = makeSut();
+            const input = mockInput();
+            const historicals = await sut.getHistorical(input);
+            expect(historicals).toEqual(loadHistoricalsSampleRepository.mockHistoricalSample);
+        });
     });
 });
