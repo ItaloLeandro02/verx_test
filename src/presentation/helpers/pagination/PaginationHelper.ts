@@ -9,12 +9,19 @@ export class PaginationHelper implements Pagination {
         DEFAULT: 0
     }
 
-    getPaginationInfo(params?: PaginationParams): PaginationInfo {
+    getPaginationInfo (params?: PaginationParams): PaginationInfo {
+        let limit = this.normalizeNumberToInteger(params?.limit);
         return {
-            limit: params?.limit 
-                ? (parseInt(params.limit) > this.LIMIT.MAX ? this.LIMIT.MAX : parseInt(params.limit)) 
-                : this.LIMIT.MIN,
+            limit: limit < this.LIMIT.MIN ? this.LIMIT.MIN : (limit > this.LIMIT.MAX ? this.LIMIT.MAX : limit),
             offset: params?.offset ? parseInt(params.offset) : this.OFFSET.DEFAULT
         }
+    }
+
+    private normalizeNumberToInteger (value?: string): number {
+        if (!value) {
+            return 0;
+        }
+        const valueToint = parseInt(value);
+        return Number.isInteger(valueToint) ? valueToint : 0;
     }
 }
