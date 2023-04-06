@@ -1,7 +1,6 @@
 import { Knex } from "knex";
 import { LoadSampleCutOffScoreRepository, SampleCutOffScore } from "@/data/protocols/db/sample/LoadSampleCutOffScoreRepository";
-import { SaveSampleRepository } from "@/data/protocols/db/sample/SaveSampleRepository";
-import { SampleAnalyzeParams } from "@/domain/usercases/sample";
+import { SaveSampleParams, SaveSampleRepository } from "@/data/protocols/db/sample/SaveSampleRepository";
 import { LoadHistoricalsSampleRepository, LoadHistoricalsSampleRepositoryParams } from "@/data/protocols/db/sample/LoadHistoricalsSampleRepository";
 import { HistoricalSample } from "@/domain/usercases/sample/GetHistoricalSamples";
 
@@ -27,7 +26,7 @@ export class SampleKnexRepository implements LoadSampleCutOffScoreRepository, Sa
         return sampleCutOffScore;
     }
 
-    async saveSample(saveSample: SampleAnalyzeParams, result: "positivo" | "negativo"): Promise<void> {
+    async saveSample(saveSample: SaveSampleParams, result: "positivo" | "negativo"): Promise<void> {
         await this.connection('samples').insert({ ...saveSample, result });
     }
 

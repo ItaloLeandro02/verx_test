@@ -2,25 +2,10 @@ import request from 'supertest'
 import { sign } from 'jsonwebtoken';
 import { faker } from '@faker-js/faker';
 import { KnexHelper } from '@/infra/db/knex/helper/KnexHelper';
-import { SampleAnalyzeParams } from '@/domain/usercases/sample';
 import { InvalidParamError, MissingParamError } from '@/presentation/errors';
 import env from '@/main/config/env';
+import { mockSampleAnalyzeParams } from '@/utils/TestHelper';
 
-const mockSampleAnalyzeParams = (): SampleAnalyzeParams => ({
-    codigoAmostra: "02383322",
-    cocaina: 0.678,
-    anfetamina: 0.1,
-    metanfetamina: 0.1,
-    mda: 0.1,
-    mdma: 0,
-    thc: 0.04,
-    morfina: 0.1,
-    codeina: 0.1,
-    heroina: 0.1,
-    benzoilecgonina: 0,
-    cocaetileno: 0,
-    norcocaina: 0
-});
 const makeAccessToken = async (): Promise<string> => {
     const saveParams = {
         name: faker.name.fullName(),
@@ -109,7 +94,7 @@ describe('Sample Routes', () => {
             const accessToken = await makeAccessToken();
             const httpRequest = {
                 ...mockSampleAnalyzeParams(),
-                mdma: 0.21
+                mdma: "0.21"
             };
             const response = await request(app)
             .post('/api/sample-analysis')
@@ -125,7 +110,7 @@ describe('Sample Routes', () => {
             const accessToken = await makeAccessToken();
             const httpRequest = {
                 ...mockSampleAnalyzeParams(),
-                benzoilecgonina: 0.5
+                benzoilecgonina: "0.5"
             };
             const response = await request(app)
             .post('/api/sample-analysis')
@@ -141,7 +126,7 @@ describe('Sample Routes', () => {
             const accessToken = await makeAccessToken();
             const httpRequest = {
                 ...mockSampleAnalyzeParams(),
-                cocaetileno: 0.5
+                cocaetileno: "0.5"
             };
             const response = await request(app)
             .post('/api/sample-analysis')
@@ -157,7 +142,7 @@ describe('Sample Routes', () => {
             const accessToken = await makeAccessToken();
             const httpRequest = {
                 ...mockSampleAnalyzeParams(),
-                norcocaina: 0.5
+                norcocaina: "0.5"
             };
             const response = await request(app)
             .post('/api/sample-analysis')

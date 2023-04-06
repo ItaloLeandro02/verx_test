@@ -1,7 +1,8 @@
-import { SampleAnalyzeParams } from "@/domain/usercases/sample";
 import { KnexHelper } from "@/infra/db/knex/helper/KnexHelper";
 import { SampleKnexRepository } from "@/infra/db/knex/sample/SampleKnexRepository";
 import { PaginationInfo } from "@/presentation/protocols";
+import { insertSample, mockDefaultSampleCuttOffScore, mockSampleAnalyzeParams } from "@/utils/TestHelper";
+import { convertSampleParamsToSaveDatabase } from "@/utils/ConvertSampleParamsToSaveDatabase";
 
 type SutTypes = {
     sut: SampleKnexRepository
@@ -13,54 +14,6 @@ const makeSut = (): SutTypes => {
     return {
         sut
     };
-};
-
-const defaultSampleCuttOffScore = {
-    id: 1,
-    cocaina: 0.5,
-    anfetamina: 0.2,
-    metanfetamina: 0.2,
-    mda: 0.2,
-    mdma: 0.2,
-    thc: 0.05,
-    morfina: 0.2,
-    codeina: 0.2,
-    heroina: 0.2
-};
-
-const mockSampleAnalyzeParams = (): SampleAnalyzeParams => ({
-    codigoAmostra: "02383322",
-    cocaina: 0.678,
-    anfetamina: 0.1,
-    metanfetamina: 0.1,
-    mda: 0.1,
-    mdma: 0,
-    thc: 0.1,
-    morfina: 0.1,
-    codeina: 0.1,
-    heroina: 0.1,
-    benzoilecgonina: 0,
-    cocaetileno: 0,
-    norcocaina: 0
-});
-const insertSample = async (): Promise<void> => {
-    await KnexHelper.connection('samples')
-    .insert({
-        codigoAmostra: "02383322",
-        cocaina: 0.678,
-        anfetamina: 0.1,
-        metanfetamina: 0.1,
-        mda: 0.1,
-        mdma: 0,
-        thc: 0.1,
-        morfina: 0.1,
-        codeina: 0.1,
-        heroina: 0.1,
-        benzoilecgonina: 0,
-        cocaetileno: 0,
-        norcocaina: 0,
-        result: "positivo"
-    });
 };
 
 describe('SampleKnexRepository', () => {
@@ -81,7 +34,7 @@ describe('SampleKnexRepository', () => {
             const { sut } = makeSut();
             const sampleCuttOffScore = await sut.loadSampleCutOffScore();
             expect(sampleCuttOffScore).toBeTruthy();
-            expect(sampleCuttOffScore).toEqual(defaultSampleCuttOffScore);
+            expect(sampleCuttOffScore).toEqual(mockDefaultSampleCuttOffScore());
         });
     });
     describe('SaveSampleRepository', () => {
@@ -90,23 +43,24 @@ describe('SampleKnexRepository', () => {
             const sampleCuttOffScore = await sut.loadSampleCutOffScore();
             expect(sampleCuttOffScore).toBeTruthy();
             const sampleAnalyze = mockSampleAnalyzeParams();
+            const SaveSampleParams = convertSampleParamsToSaveDatabase(sampleAnalyze);
             const result = "positivo";
-            await sut.saveSample(sampleAnalyze, result);
+            await sut.saveSample(SaveSampleParams, result);
             const sampleResult = await KnexHelper.connection('samples').first().orderBy('id', 'desc');
             expect(sampleResult).toBeTruthy();
             expect(sampleResult.id).toBeTruthy();
             expect(sampleResult.result).toBe(result);
-            expect(sampleResult.codigoAmostra).toBe(sampleAnalyze.codigoAmostra);
-            expect(parseFloat(sampleResult.cocaina)).toBe(sampleAnalyze.cocaina);
-            expect(parseFloat(sampleResult.anfetamina)).toBe(sampleAnalyze.anfetamina);
-            expect(parseFloat(sampleResult.mda)).toBe(sampleAnalyze.mda);
-            expect(parseFloat(sampleResult.thc)).toBe(sampleAnalyze.thc);
-            expect(parseFloat(sampleResult.morfina)).toBe(sampleAnalyze.morfina);
-            expect(parseFloat(sampleResult.codeina)).toBe(sampleAnalyze.codeina);
-            expect(parseFloat(sampleResult.heroina)).toBe(sampleAnalyze.heroina);
-            expect(parseFloat(sampleResult.benzoilecgonina)).toBe(sampleAnalyze.benzoilecgonina);
-            expect(parseFloat(sampleResult.cocaetileno)).toBe(sampleAnalyze.cocaetileno);
-            expect(parseFloat(sampleResult.norcocaina)).toBe(sampleAnalyze.norcocaina);
+            expect(sampleResult.codigoAmostra).toBe(SaveSampleParams.codigoAmostra);
+            expect(parseFloat(sampleResult.cocaina)).toBe(SaveSampleParams.cocaina);
+            expect(parseFloat(sampleResult.anfetamina)).toBe(SaveSampleParams.anfetamina);
+            expect(parseFloat(sampleResult.mda)).toBe(SaveSampleParams.mda);
+            expect(parseFloat(sampleResult.thc)).toBe(SaveSampleParams.thc);
+            expect(parseFloat(sampleResult.morfina)).toBe(SaveSampleParams.morfina);
+            expect(parseFloat(sampleResult.codeina)).toBe(SaveSampleParams.codeina);
+            expect(parseFloat(sampleResult.heroina)).toBe(SaveSampleParams.heroina);
+            expect(parseFloat(sampleResult.benzoilecgonina)).toBe(SaveSampleParams.benzoilecgonina);
+            expect(parseFloat(sampleResult.cocaetileno)).toBe(SaveSampleParams.cocaetileno);
+            expect(parseFloat(sampleResult.norcocaina)).toBe(SaveSampleParams.norcocaina);
         });
     });
     describe('LoadHistoricalsSampleRepository', () => {

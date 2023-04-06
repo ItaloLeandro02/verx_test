@@ -1,5 +1,7 @@
-import { CalculateSampleResultSpy, LoadSampleCutOffScoreRepositorySpy, SaveSampleRepositorySpy, mockSampleAnalyzeParams } from "@/data/test";
+import { CalculateSampleResultSpy, LoadSampleCutOffScoreRepositorySpy, SaveSampleRepositorySpy } from "@/data/test";
 import { DbSampleAnalysis } from "@/data/usecases/sample/DbSampleAnalysis";
+import { convertSampleParamsToSaveDatabase } from "@/utils/ConvertSampleParamsToSaveDatabase";
+import { mockSampleAnalyzeParams } from "@/utils/TestHelper";
 
 type SutTypes = { 
     sut: DbSampleAnalysis,
@@ -58,9 +60,10 @@ describe('DbSampleAnalysis', () => {
         it ('Deve chamar SaveSampleRepository com os valores corretos', async () => {
             const { sut, calculateSampleResult, saveSampleRepository } = makeSut();
             const input = mockSampleAnalyzeParams();
+            const saveSampleParams = convertSampleParamsToSaveDatabase(input);
             await sut.analyze(input);
             expect(saveSampleRepository.sampleResultParams).toEqual(calculateSampleResult.mockResult);
-            expect(saveSampleRepository.sampleAnalyzeParams).toEqual(input);
+            expect(saveSampleRepository.sampleAnalyzeParams).toEqual(saveSampleParams);
         });
         it ('Deve retornar uma exceção caso SaveSampleRepository falhe', async () => {
             const { sut, saveSampleRepository } = makeSut();
