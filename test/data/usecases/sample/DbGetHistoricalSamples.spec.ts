@@ -60,5 +60,12 @@ describe('DbGetHistoricalSamples', () => {
             const historicals = await sut.getHistorical(input);
             expect(historicals).toEqual(loadHistoricalsSampleRepository.mockHistoricalSample);
         });
+        it ('Deve retornar um array vazio', async () => {
+            const { sut, loadHistoricalsSampleRepository } = makeSut();
+            loadHistoricalsSampleRepository.mockHistoricalSample = [];
+            const input = mockInput();
+            const historicals = await sut.getHistorical(input);
+            expect(historicals).toEqual(loadHistoricalsSampleRepository.mockHistoricalSample);
+        });
     });
 });
