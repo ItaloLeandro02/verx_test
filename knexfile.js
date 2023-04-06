@@ -1,14 +1,18 @@
 
-import type { Knex } from "knex";
-import { resolve } from 'path';
+const { resolve } = require('path');
 
-export const config: { [key: string]: Knex.Config } = {
+/**
+ * @type { Object.<string, import("knex").Knex.Config> }
+ */
+module.exports = {
+
   development: {
     client: "postgresql",
     connection: {
       database: "verx_development",
       user: "postgres",
-      password: "12345"
+      password: "12345",
+      host: process.env.DB_HOST
     },
     pool: {
       min: 2,
@@ -16,12 +20,10 @@ export const config: { [key: string]: Knex.Config } = {
     },
     migrations: {
       tableName: "knex_migrations",
-      directory: resolve('src/infra/db/knex/migrations'),
-      extension: 'ts'
+      directory: resolve('src/infra/db/knex/migrations')
     },
     seeds: {
-      directory: resolve('src/infra/db/knex/seeds'),
-      extension: 'ts'
+      directory: resolve('src/infra/db/knex/seeds')
     }
   },
 
@@ -48,18 +50,19 @@ export const config: { [key: string]: Knex.Config } = {
   },
 
   production: {
-    client: "postgresql",
+    client: 'postgresql',
     connection: {
-      database: "my_db",
-      user: "username",
-      password: "password"
+      database: 'my_db',
+      user:     'username',
+      password: 'password'
     },
     pool: {
       min: 2,
       max: 10
     },
     migrations: {
-      tableName: "knex_migrations"
+      tableName: 'knex_migrations'
     }
   }
+
 };
