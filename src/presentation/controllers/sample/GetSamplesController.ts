@@ -9,7 +9,7 @@ export class GetSamplesController implements Controller {
 
     async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
         try {
-            const historicals = await this.getHistoricalSamples.getHistorical(httpRequest.params);
+            const historicals = await this.getHistoricalSamples.getHistorical(httpRequest.query);
             return ok(historicals);
         } catch (error) {
             return serverError(error);
