@@ -45,6 +45,18 @@ describe('Pagination Helper', () => {
             offset: parseInt(input.offset)
         });
     });
+    it ('Deve retornar a parte inteira para limit caso seja passado um valor decimal', () => {
+        const { sut } = makeSut();
+        const input = {
+            limit: "10.5",
+            offset: "6"
+        };
+        const paginationInfo = sut.getPaginationInfo(input);
+        expect(paginationInfo).toEqual({
+            limit: 10,
+            offset: parseInt(input.offset)
+        });
+    });
     it ('Deve retornar o valor mínimo para offset', () => {
         const { sut } = makeSut();
         const input = {
