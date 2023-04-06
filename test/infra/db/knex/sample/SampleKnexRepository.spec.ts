@@ -122,5 +122,17 @@ describe('SampleKnexRepository', () => {
             const historicals = await sut.loadHistoricals(paginationInfo);
             expect(historicals).toHaveLength(10);
         });
+        it ('Deve retornar as duas últimas consultas do banco', async () => {
+            const { sut } = makeSut();
+            for (const iterator of new Array(12)) {
+                await insertSample();
+            }
+            const paginationInfo: PaginationInfo = {
+                limit: 10,
+                offset: 10
+            };
+            const historicals = await sut.loadHistoricals(paginationInfo);
+            expect(historicals).toHaveLength(2);
+        });
     });
 });
