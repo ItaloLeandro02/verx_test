@@ -46,5 +46,12 @@ describe('GetSamplesController', () => {
             const httpResponse = await sut.handle(httpRequest);
             expect(httpResponse).toEqual(ok(getHistoricalSamples.mockHistoricalSample));
         });
+        it ('Deve retornar 200 com um array vazio', async () => {
+            const { sut, getHistoricalSamples } = makeSut();
+            getHistoricalSamples.mockHistoricalSample = [];
+            const httpRequest = makeHttpRequest();
+            const httpResponse = await sut.handle(httpRequest);
+            expect(httpResponse).toEqual(ok(getHistoricalSamples.mockHistoricalSample));
+        });
     });
 });
