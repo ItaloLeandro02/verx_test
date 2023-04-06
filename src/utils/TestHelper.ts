@@ -1,7 +1,12 @@
-import { SampleAnalyzeParams, SampleAnalyzeResult } from "@/domain/usercases/sample";
+import { faker } from "@faker-js/faker";
+import { sign } from "jsonwebtoken";
+import { SampleAnalyzeParams } from "@/domain/usercases/sample";
 import { SampleCutOffScore } from "@/data/protocols/db/sample/LoadSampleCutOffScoreRepository";
 import { SaveSampleParams } from "@/data/protocols/db/sample/SaveSampleRepository";
 import { KnexHelper } from "@/infra/db/knex/helper/KnexHelper";
+import { AuthenticationParams } from "@/domain/usercases/account";
+import { GetHistoricalSamplesParams } from "@/domain/usercases/sample/GetHistoricalSamples";
+import env from "@/main/config/env";
 
 export const mockSampleAnalyzeParams = (): SampleAnalyzeParams => ({
     codigoAmostra: "02383322",
@@ -58,7 +63,29 @@ export const mockSampleInsert = (): SaveSampleParams & { result: "positivo" | "n
     norcocaina: 0,
     result: "positivo"
 });
+export const mockuthenticationParams = (): AuthenticationParams => ({
+    email: faker.internet.email(),
+    password: faker.internet.password()
+});
+export const mockGetHistoricalSamplesParams = (): GetHistoricalSamplesParams => ({
+    limit: "10",
+    offset: "0"
+});
+
 export const insertSample = async (): Promise<void> => {
     await KnexHelper.connection('samples')
     .insert(mockSampleInsert());
 };
+
+export const makeAccessToken = async (): Promise<string> => {
+    const saveParams = {
+        name: faker.name.fullName(),
+        email: faker.internet.email(),
+        password: faker.internet.password()
+    };
+    await KnexHelper.connection('accounts').insert(saveParams);
+    const account = await KnexHelper.connection('accounts').where('email', saveParams.email).first();
+    const accessToken = sign({ id: account.id }, env.jwtSecret);
+    await KnexHelper.connection('accounts').update({ accessToken: accessToken }).where('id', account.id);
+    return accessToken;
+}

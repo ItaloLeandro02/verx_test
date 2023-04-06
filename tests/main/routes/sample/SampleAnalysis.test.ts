@@ -1,25 +1,7 @@
 import request from 'supertest'
-import { sign } from 'jsonwebtoken';
-import { faker } from '@faker-js/faker';
 import { KnexHelper } from '@/infra/db/knex/helper/KnexHelper';
 import { InvalidParamError, MissingParamError } from '@/presentation/errors';
-import env from '@/main/config/env';
-import { mockSampleAnalyzeParams } from '@/utils/TestHelper';
-
-const makeAccessToken = async (): Promise<string> => {
-    const saveParams = {
-        name: faker.name.fullName(),
-        email: faker.internet.email(),
-        password: faker.internet.password()
-    };
-    await KnexHelper.connection('accounts').insert(saveParams);
-    const account = await KnexHelper.connection('accounts').where('email', saveParams.email).first();
-    const accessToken = sign({ id: account.id }, env.jwtSecret);
-    
-    await KnexHelper.connection('accounts').update({ accessToken: accessToken }).where('id', account.id);
-  
-    return accessToken
-  }
+import { makeAccessToken, mockSampleAnalyzeParams } from '@/utils/TestHelper';
 
 let app: any = null;
 describe('Sample Routes', () => {
