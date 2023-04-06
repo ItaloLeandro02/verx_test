@@ -41,6 +41,18 @@ describe('Pagination Helper', () => {
         expect(paginationInfo).toEqual({
             limit: parseInt(input.limit),
             offset: 0
-        })
+        });
+    });
+    it ('Deve retornar o valor máximo para limit', () => {
+        const { sut } = makeSut();
+        const input = {
+            limit: "500",
+            offset: "6"
+        };
+        const paginationInfo = sut.getPaginationInfo(input);
+        expect(paginationInfo).toEqual({
+            limit: 50,
+            offset: parseInt(input.offset)
+        });
     });
 });
