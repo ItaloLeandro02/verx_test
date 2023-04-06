@@ -12,7 +12,7 @@ export class PaginationHelper implements Pagination {
     getPaginationInfo(params?: PaginationParams): PaginationInfo {
         return {
             limit: this.LIMIT.MIN,
-            offset: this.OFFSET.DEFAULT
+            offset: params?.offset ? parseInt(params.offset) : this.OFFSET.DEFAULT
         }
     }
 }
