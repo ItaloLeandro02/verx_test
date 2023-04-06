@@ -7,3 +7,4 @@ export * from "./CalculateSampleResultSpy";
 export * from "./SaveSampleRepositorySpy";
 export * from "./TokenCheckerSpy";
 export * from "./PaginationSpy";
+export * from "./mocks";
