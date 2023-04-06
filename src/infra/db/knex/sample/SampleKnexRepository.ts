@@ -2,8 +2,10 @@ import { Knex } from "knex";
 import { LoadSampleCutOffScoreRepository, SampleCutOffScore } from "@/data/protocols/db/sample/LoadSampleCutOffScoreRepository";
 import { SaveSampleRepository } from "@/data/protocols/db/sample/SaveSampleRepository";
 import { SampleAnalyzeParams } from "@/domain/usercases/sample";
+import { LoadHistoricalsSampleRepository, LoadHistoricalsSampleRepositoryParams } from "@/data/protocols/db/sample/LoadHistoricalsSampleRepository";
+import { HistoricalSample } from "@/domain/usercases/sample/GetHistoricalSamples";
 
-export class SampleKnexRepository implements LoadSampleCutOffScoreRepository, SaveSampleRepository {
+export class SampleKnexRepository implements LoadSampleCutOffScoreRepository, SaveSampleRepository, LoadHistoricalsSampleRepository {
     constructor(
         private readonly connection: Knex
     ) {}
@@ -27,5 +29,26 @@ export class SampleKnexRepository implements LoadSampleCutOffScoreRepository, Sa
 
     async saveSample(saveSample: SampleAnalyzeParams, result: "positivo" | "negativo"): Promise<void> {
         await this.connection('samples').insert({ ...saveSample, result });
+    }
+
+    async loadHistoricals(params: LoadHistoricalsSampleRepositoryParams): Promise<HistoricalSample[]> {
+        const historicalsData = await this.connection('samples').limit(params.limit).offset(params.offset);
+        return historicalsData.map(historicalData => ({
+            id: parseInt(historicalData.id),
+            codigoAmostra: historicalData.codigoAmostra,
+            cocaina: parseFloat(historicalData.cocaina),
+            anfetamina: parseFloat(historicalData.anfetamina),
+            metanfetamina: parseFloat(historicalData.metanfetamina),
+            mda: parseFloat(historicalData.mda),
+            mdma: parseFloat(historicalData.mdma),
+            thc: parseFloat(historicalData.thc),
+            morfina: parseFloat(historicalData.morfina),
+            codeina: parseFloat(historicalData.codeina),
+            heroina: parseFloat(historicalData.heroina),
+            benzoilecgonina: parseFloat(historicalData.benzoilecgonina),
+            cocaetileno: parseFloat(historicalData.cocaetileno),
+            norcocaina: parseFloat(historicalData.norcocaina),
+            result: historicalData.result
+        }));
     }
 }
