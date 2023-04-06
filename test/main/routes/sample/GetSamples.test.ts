@@ -94,5 +94,16 @@ describe('Sample Routes', () => {
             expect(response.status).toBe(200);
             expect(response.body).toHaveLength(2);
         });
+        it ('Deve retornar 200 com array vazio caso não tenha registros no banco a a partir do offset informado', async () => {
+            for (const iterator of new Array(12)) {
+                await insertSample();
+            }
+            const accessToken = await makeAccessToken();
+            const response = await request(app)
+            .get('/api/sample-historicals?limit=10&offset=20')
+            .set('x-access-token', accessToken)
+            expect(response.status).toBe(200);
+            expect(response.body).toHaveLength(0);
+        });
     });
 });
