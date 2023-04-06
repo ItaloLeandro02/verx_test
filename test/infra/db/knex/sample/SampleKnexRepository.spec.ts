@@ -134,5 +134,17 @@ describe('SampleKnexRepository', () => {
             const historicals = await sut.loadHistoricals(paginationInfo);
             expect(historicals).toHaveLength(2);
         });
+        it ('Deve retornar um array vazio caso não exista dados a partir do offset', async () => {
+            const { sut } = makeSut();
+            for (const iterator of new Array(12)) {
+                await insertSample();
+            }
+            const paginationInfo: PaginationInfo = {
+                limit: 10,
+                offset: 20
+            };
+            const historicals = await sut.loadHistoricals(paginationInfo);
+            expect(historicals).toHaveLength(0);
+        });
     });
 });
