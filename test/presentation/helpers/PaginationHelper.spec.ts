@@ -56,6 +56,18 @@ describe('Pagination Helper', () => {
             offset: 0
         });
     });
+    it ('Deve retornar o valor mínimo para offset caso não seja passado um número', () => {
+        const { sut } = makeSut();
+        const input = {
+            limit: "20",
+            offset: faker.random.word()
+        };
+        const paginationInfo = sut.getPaginationInfo(input);
+        expect(paginationInfo).toEqual({
+            limit: parseInt(input.limit),
+            offset: 0
+        });
+    });
     it ('Deve retornar o valor máximo para limit', () => {
         const { sut } = makeSut();
         const input = {
