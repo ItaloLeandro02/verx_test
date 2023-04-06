@@ -1,5 +1,5 @@
 import { GetSamplesController } from "@/presentation/controllers/sample/GetSamplesController";
-import { serverError } from "@/presentation/helpers/http";
+import { ok, serverError } from "@/presentation/helpers/http";
 import { HttpRequest } from "@/presentation/protocols";
 import { GetHistoricalSamplesSpy } from "@/presentation/test";
 
@@ -39,6 +39,12 @@ describe('GetSamplesController', () => {
             const httpRequest = makeHttpRequest();
             const httpResponse = await sut.handle(httpRequest);
             expect(httpResponse).toEqual(serverError(new Error()));
+        });
+        it ('Deve retornar 200 com os históricos', async () => {
+            const { sut, getHistoricalSamples } = makeSut();
+            const httpRequest = makeHttpRequest();
+            const httpResponse = await sut.handle(httpRequest);
+            expect(httpResponse).toEqual(ok(getHistoricalSamples.mockHistoricalSample));
         });
     });
 });
