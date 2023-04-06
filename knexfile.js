@@ -28,11 +28,9 @@ module.exports = {
   },
 
   test: {
-    client: "postgresql",
-    connection: {
-      database: "verx_test",
-      user: "postgres",
-      password: "12345"
+    client: 'sqlite3',
+      connection: {
+      filename: "./mydb-test.sqlite",
     },
     pool: {
       min: 2,
