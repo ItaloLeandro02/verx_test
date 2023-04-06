@@ -1,4 +1,5 @@
 import { GetSamplesController } from "@/presentation/controllers/sample/GetSamplesController";
+import { serverError } from "@/presentation/helpers/http";
 import { HttpRequest } from "@/presentation/protocols";
 import { GetHistoricalSamplesSpy } from "@/presentation/test";
 
@@ -31,6 +32,13 @@ describe('GetSamplesController', () => {
             const httpRequest = makeHttpRequest();
             await sut.handle(httpRequest);
             expect(getHistoricalSamples.requestParams).toEqual(httpRequest.params);
+        });
+        it ('Deve retornar 500 caso GetHistoricalSamples lance uma exceção', async () => {
+            const { sut, getHistoricalSamples } = makeSut();
+            jest.spyOn(getHistoricalSamples, 'getHistorical').mockImplementationOnce(() => { throw new Error() });
+            const httpRequest = makeHttpRequest();
+            const httpResponse = await sut.handle(httpRequest);
+            expect(httpResponse).toEqual(serverError(new Error()));
         });
     });
 });
