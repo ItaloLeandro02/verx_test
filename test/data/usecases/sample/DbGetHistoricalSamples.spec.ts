@@ -1,18 +1,22 @@
 import { PaginationSpy } from "@/data/test";
+import { LoadHistoricalsSampleRepositorySpy } from "@/data/test/LoadHistoricalsSampleRepositorySpy";
 import { DbGetHistoricalSamples } from "@/data/usecases/sample/DbGetHistoricalSamples";
 import { GetHistoricalSamplesParams } from "@/domain/usercases/sample/GetHistoricalSamples";
 
 type SutTypes = {
     sut: DbGetHistoricalSamples,
-    pagination: PaginationSpy
+    pagination: PaginationSpy,
+    loadHistoricalsSampleRepository: LoadHistoricalsSampleRepositorySpy
 };
 
 const makeSut = (): SutTypes => {
     const pagination = new PaginationSpy();
-    const sut = new DbGetHistoricalSamples(pagination);
+    const loadHistoricalsSampleRepository = new LoadHistoricalsSampleRepositorySpy();
+    const sut = new DbGetHistoricalSamples(pagination, loadHistoricalsSampleRepository);
     return {
         sut,
-        pagination
+        pagination,
+        loadHistoricalsSampleRepository
     };
 };
 const mockInput = (): GetHistoricalSamplesParams => ({
@@ -34,6 +38,14 @@ describe('DbGetHistoricalSamples', () => {
             const input = mockInput();
             const promise = sut.getHistorical(input);
             await expect(promise).rejects.toThrow();
+        });
+    });
+    describe('LoadHistoricalsSampleRepository', () => {
+        it ('Deve chamar LoadHistoricalsSampleRepository com os dados corretos', async () => {
+            const { sut, loadHistoricalsSampleRepository, pagination } = makeSut();
+            const input = mockInput();
+            await sut.getHistorical(input);
+            expect(loadHistoricalsSampleRepository.requestParams).toEqual(pagination.mockResult);
         });
     });
 });
