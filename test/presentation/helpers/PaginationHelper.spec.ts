@@ -19,7 +19,7 @@ describe('Pagination Helper', () => {
         expect(paginationInfo).toEqual({
             limit: 5,
             offset: 0
-        })
+        });
     });
     it ('Deve retornar o valor mínimo para limit', () => {
         const { sut } = makeSut();
@@ -30,6 +30,17 @@ describe('Pagination Helper', () => {
         expect(paginationInfo).toEqual({
             limit: 5,
             offset: parseInt(input.offset)
+        });
+    });
+    it ('Deve retornar o valor mínimo para offset', () => {
+        const { sut } = makeSut();
+        const input = {
+            limit: "10"
+        };
+        const paginationInfo = sut.getPaginationInfo(input);
+        expect(paginationInfo).toEqual({
+            limit: parseInt(input.limit),
+            offset: 0
         })
     });
 });
