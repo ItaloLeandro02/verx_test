@@ -1,6 +1,7 @@
 import { SampleAnalyzeParams } from "@/domain/usercases/sample";
 import { KnexHelper } from "@/infra/db/knex/helper/KnexHelper";
 import { SampleKnexRepository } from "@/infra/db/knex/sample/SampleKnexRepository";
+import { PaginationInfo } from "@/presentation/protocols";
 
 type SutTypes = {
     sut: SampleKnexRepository
@@ -42,6 +43,25 @@ const mockSampleAnalyzeParams = (): SampleAnalyzeParams => ({
     cocaetileno: 0,
     norcocaina: 0
 });
+const insertSample = async (): Promise<void> => {
+    await KnexHelper.connection('samples')
+    .insert({
+        codigoAmostra: "02383322",
+        cocaina: 0.678,
+        anfetamina: 0.1,
+        metanfetamina: 0.1,
+        mda: 0.1,
+        mdma: 0,
+        thc: 0.1,
+        morfina: 0.1,
+        codeina: 0.1,
+        heroina: 0.1,
+        benzoilecgonina: 0,
+        cocaetileno: 0,
+        norcocaina: 0,
+        result: "positivo"
+    });
+};
 
 describe('SampleKnexRepository', () => {
     beforeAll(async () => {
@@ -53,7 +73,6 @@ describe('SampleKnexRepository', () => {
         await KnexHelper.deleteData('samples');
     });
     afterAll(async () => {
-        await KnexHelper.roolbackMigrations();
         await KnexHelper.disconnect();
     });
 
@@ -88,6 +107,20 @@ describe('SampleKnexRepository', () => {
             expect(parseFloat(sampleResult.benzoilecgonina)).toBe(sampleAnalyze.benzoilecgonina);
             expect(parseFloat(sampleResult.cocaetileno)).toBe(sampleAnalyze.cocaetileno);
             expect(parseFloat(sampleResult.norcocaina)).toBe(sampleAnalyze.norcocaina);
+        });
+    });
+    describe('LoadHistoricalsSampleRepository', () => {
+        it ('Deve retornar as primeiras dez consultas do banco', async () => {
+            const { sut } = makeSut();
+            for (const iterator of new Array(12)) {
+                await insertSample();
+            }
+            const paginationInfo: PaginationInfo = {
+                limit: 10,
+                offset: 0
+            };
+            const historicals = await sut.loadHistoricals(paginationInfo);
+            expect(historicals).toHaveLength(10);
         });
     });
 });
