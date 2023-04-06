@@ -10,10 +10,11 @@ export class PaginationHelper implements Pagination {
     }
 
     getPaginationInfo (params?: PaginationParams): PaginationInfo {
-        let limit = this.normalizeNumberToInteger(params?.limit);
+        const limit = this.normalizeNumberToInteger(params?.limit);
+        const offset = this.normalizeNumberToInteger(params?.offset);
         return {
             limit: limit < this.LIMIT.MIN ? this.LIMIT.MIN : (limit > this.LIMIT.MAX ? this.LIMIT.MAX : limit),
-            offset: params?.offset ? parseInt(params.offset) : this.OFFSET.DEFAULT
+            offset: offset || this.OFFSET.DEFAULT
         }
     }
 
