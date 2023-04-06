@@ -1,5 +1,4 @@
 
-require('ts-node/register');
 import type { Knex } from "knex";
 import { resolve } from 'path';
 
@@ -63,5 +62,4 @@ export const config: { [key: string]: Knex.Config } = {
       tableName: "knex_migrations"
     }
   }
-
 };
