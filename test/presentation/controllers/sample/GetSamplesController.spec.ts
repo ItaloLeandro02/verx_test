@@ -18,7 +18,7 @@ const makeSut = (): SutTypes => {
 };
 const makeHttpRequest = (): HttpRequest => {
     return {
-        params: {
+        query: {
             limit: '10',
             offset: '0'
         }
@@ -31,7 +31,7 @@ describe('GetSamplesController', () => {
             const { sut, getHistoricalSamples } = makeSut();
             const httpRequest = makeHttpRequest();
             await sut.handle(httpRequest);
-            expect(getHistoricalSamples.requestParams).toEqual(httpRequest.params);
+            expect(getHistoricalSamples.requestParams).toEqual(httpRequest.query);
         });
         it ('Deve retornar 500 caso GetHistoricalSamples lance uma exceção', async () => {
             const { sut, getHistoricalSamples } = makeSut();
