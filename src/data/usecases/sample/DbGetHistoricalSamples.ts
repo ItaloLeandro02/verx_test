@@ -10,7 +10,7 @@ export class DbGetHistoricalSamples implements GetHistoricalSamples {
 
     async getHistorical(params: GetHistoricalSamplesParams): Promise<HistoricalSample[]> {
         const paginationInfo = this.pagination.getPaginationInfo(params);
-        await this.loadHistoricalsSampleRepository.loadHistoricals(paginationInfo);
-        return Promise.resolve([]);
+        const historicals = await this.loadHistoricalsSampleRepository.loadHistoricals(paginationInfo);
+        return historicals;
     }
 }
