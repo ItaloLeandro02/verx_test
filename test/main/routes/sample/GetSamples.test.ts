@@ -72,5 +72,16 @@ describe('Sample Routes', () => {
             expect(response.status).toBe(200);
             expect(response.body).toHaveLength(5);
         });
+        it ('Deve retornar 200 com 9 itens e sem informar o offset', async () => {
+            for (const iterator of new Array(12)) {
+                await insertSample();
+            }
+            const accessToken = await makeAccessToken();
+            const response = await request(app)
+            .get('/api/sample-historicals?limit=9')
+            .set('x-access-token', accessToken)
+            expect(response.status).toBe(200);
+            expect(response.body).toHaveLength(5);
+        });
     });
 });
